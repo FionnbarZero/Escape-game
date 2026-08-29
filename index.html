@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>The Cabin That Watches — 3D</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="cabin.css">
+  <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <header><div class="brand"><b>C</b><span>THE CABIN<br>THAT WATCHES</span></div><div class="status">CLUES FOUND <strong id="count">0 / 8</strong></div></header>
+  <nav id="rooms">
+    <button data-room="0" class="active">01 MAIN CABIN</button><button data-room="1">02 BEDROOM</button><button data-room="2">03 KITCHEN</button><button data-room="3">04 TROPHY ROOM</button><button data-room="4">05 CELLAR</button><button data-room="5">06 WORKSHOP</button><button data-room="6">07 PLAYROOM</button><button data-room="7">08 ROOT CHAMBER</button><button data-room="8">09 INFINITE HOTEL</button>
+  </nav>
+  <section class="caption"><small id="chapter">CHAPTER I</small><h1 id="title">The Main Cabin</h1><p id="description">You wake on splintered floorboards. The windows are boarded from the inside.</p></section>
+  <aside><small>CURRENT OBJECTIVE</small><p id="objective">Find three pieces of the broken door handle.</p><div id="stability"><span id="stability-fill"></span></div><small id="stability-text">COMPOSURE 100%</small></aside>
+  <div id="crosshair">+</div><div id="prompt">CLICK TO ENTER · WASD TO MOVE · E TO INTERACT</div>
+  <div id="combat-hud">SPIDER HITS: <strong id="creature-hits">0 / 5</strong></div>
+  <section id="maze-map-panel"><small>ROOT MAP</small><canvas id="maze-map" width="248" height="248"></canvas><div><i class="map-player"></i> YOU <i class="map-heart"></i> HEART</div></section>
+  <button id="hint">LISTEN TO THE CABIN</button>
+  <button id="story-lobby">STORY LOBBY</button>
+  <button id="reset-game">RESET GAME</button>
+  <dialog id="puzzle"><button class="close">×</button><small id="puzzle-kicker"></small><h2 id="puzzle-title"></h2><p id="puzzle-copy"></p><div id="puzzle-body"></div><p id="feedback"></p></dialog>
+  <dialog id="intro"><small id="intro-kicker">DUSK · THE NORTH WOODS</small><h2 id="intro-title">The trail disappeared<br><em>twenty minutes ago.</em></h2><p id="intro-copy">Your phone has no signal. Behind you, something keeps matching the rhythm of your footsteps.</p><button id="enter">KEEP WALKING</button></dialog>
+  <div id="blackout"><span>Something is standing behind you.</span></div>
+  <script type="module" src="three-game.js"></script>
+</body>
+</html>

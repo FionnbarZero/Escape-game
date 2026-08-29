@@ -1,0 +1,55 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Script" path="res://scripts/mansion_3d.gd" id="2_mansion"]
+[ext_resource type="Script" path="res://scripts/player_3d.gd" id="3_player"]
+
+[sub_resource type="Environment" id="Environment_house"]
+background_mode = 1
+background_color = Color(0.008, 0.008, 0.007, 1)
+ambient_light_source = 3
+ambient_light_color = Color(0.23, 0.21, 0.17, 1)
+ambient_light_energy = 0.42
+tonemap_mode = 2
+fog_enabled = true
+fog_light_color = Color(0.12, 0.115, 0.1, 1)
+fog_density = 0.018
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_main")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_house")
+
+[node name="Moonlight" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-55, -28, 0)
+light_color = Color(0.56, 0.59, 0.65, 1)
+light_energy = 0.55
+shadow_enabled = true
+
+[node name="Mansion" type="Node3D" parent="."]
+script = ExtResource("2_mansion")
+
+[node name="Player" type="CharacterBody3D" parent="."]
+position = Vector3(0, 1.7, 5.5)
+script = ExtResource("3_player")
+
+[node name="Collider" type="CollisionShape3D" parent="Player"]
+position = Vector3(0, -0.8, 0)
+
+[node name="Head" type="Node3D" parent="Player"]
+
+[node name="Camera3D" type="Camera3D" parent="Player/Head"]
+current = true
+fov = 72.0
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Interface" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
