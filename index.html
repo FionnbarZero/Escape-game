@@ -15,8 +15,9 @@
   </nav>
   <section class="caption"><small id="chapter">CHAPTER I</small><h1 id="title">The Main Cabin</h1><p id="description">You wake on splintered floorboards. The windows are boarded from the inside.</p></section>
   <aside><small>CURRENT OBJECTIVE</small><p id="objective">Find three pieces of the broken door handle.</p><div id="stability"><span id="stability-fill"></span></div><small id="stability-text">COMPOSURE 100%</small></aside>
-  <div id="crosshair">+</div><div id="prompt">CLICK TO ENTER · WASD TO MOVE · E TO INTERACT</div>
+  <div id="crosshair">+</div><div id="prompt">WASD MOVE · SHIFT SPRINT · SPACE JUMP · C/CTRL CROUCH · E INTERACT</div>
   <div id="combat-hud">SPIDER HITS: <strong id="creature-hits">0 / 5</strong></div>
+  <div id="fun-hud">COURAGE SHARDS <strong id="fun-count">0</strong></div>
   <section id="maze-map-panel"><small>ROOT MAP</small><canvas id="maze-map" width="248" height="248"></canvas><div><i class="map-player"></i> YOU <i class="map-heart"></i> HEART</div></section>
   <button id="hint">LISTEN TO THE CABIN</button>
   <button id="story-lobby">STORY LOBBY</button>
@@ -24,6 +25,7 @@
   <dialog id="puzzle"><button class="close">×</button><small id="puzzle-kicker"></small><h2 id="puzzle-title"></h2><p id="puzzle-copy"></p><div id="puzzle-body"></div><p id="feedback"></p></dialog>
   <dialog id="intro"><small id="intro-kicker">DUSK · THE NORTH WOODS</small><h2 id="intro-title">The trail disappeared<br><em>twenty minutes ago.</em></h2><p id="intro-copy">Your phone has no signal. Behind you, something keeps matching the rhythm of your footsteps.</p><button id="enter">KEEP WALKING</button></dialog>
   <div id="blackout"><span>Something is standing behind you.</span></div>
+  <div id="scare-overlay"><i></i><i></i><span></span></div>
   <script type="module" src="three-game.js"></script>
 </body>
 </html>
