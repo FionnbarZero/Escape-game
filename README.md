@@ -63,6 +63,12 @@ Room 16 begins as an ordinary guest room with three tasks involving its bed, war
 
 The repeating hotel hallway is now nearly twice as long, with many more numbered doors and three clearly marked jump-or-crouch obstacles. Room 13 is fully enterable from the stairwell after receiving its key and contains a furnished guest room, a searchable suitcase, and a return door.
 
+Leaving Room 13 begins the new numbered-room hotel run: three floors with four rooms each. Search desks, carts, paintings, cupboards, mirrors, guestbooks, closets, and safes to recover room keys, maintenance tools, and elevator passes. Every exit stays locked until the current room gives up its required item; the final safe contains the master hotel key.
+
+Each new browser game session randomizes the puzzle clues, hotel search locations, boss variant, and boss response sequence. The hotel staff now turn in the direction they are walking, and the intro handoff enters the Story Lobby directly after the final opening prompt.
+
+The opening sequence now places you directly inside the Main Cabin. The renderer automatically uses a lighter performance mode on lower-power devices to reduce stutter.
+
 Every playable room contains an optional glowing Courage Shard. Aim at it and press **E** to collect it, restore composure, and increase the persistent shard counter.
 
 Unpredictable horror events occur during active exploration: power failures, watching eyes, whispered warnings, camera jolts, and low-frequency audio stingers. They pause automatically during dialogs and in the Story Lobby.
