@@ -17,10 +17,44 @@
   </nav>
   <section class="caption"><small id="chapter">CHAPTER I</small><h1 id="title">The Main Cabin</h1><p id="description">You wake on splintered floorboards. The windows are boarded from the inside.</p></section>
   <aside><small>CURRENT OBJECTIVE</small><p id="objective">Find three pieces of the broken door handle.</p><div id="stability"><span id="stability-fill"></span></div><small id="stability-text">COMPOSURE 100%</small></aside>
-  <div id="crosshair">+</div><div id="prompt">WASD MOVE · SHIFT SPRINT · SPACE JUMP · C/CTRL CROUCH · E INTERACT</div>
+  <div id="crosshair">+</div><div id="prompt">WASD MOVE · SHIFT SPRINT · SPACE JUMP · C/CTRL CROUCH · SHIFT+C SLIDE · E INTERACT</div>
   <div id="combat-hud">SPIDER HITS: <strong id="creature-hits">0 / 5</strong></div>
   <div id="fun-hud">COURAGE SHARDS <strong id="fun-count">0</strong></div>
+  <section id="eviction-hud" aria-live="assertive">
+    <small>STERILE EVENT // REALITY FAILURE</small>
+    <strong>THE EVICTION</strong>
+    <div><span id="eviction-phase">DISTORTION WARNING</span><b id="eviction-time">03.0</b></div>
+    <i><span id="eviction-progress"></span></i>
+    <p id="eviction-instruction">The lights are turning white. Watch the staff.</p>
+  </section>
+  <div id="eviction-flash"></div>
   <section id="maze-map-panel"><small>ROOT MAP</small><canvas id="maze-map" width="248" height="248"></canvas><div><i class="map-player"></i> YOU <i class="map-heart"></i> HEART</div></section>
+  <section id="story-select" aria-label="Choose a story">
+    <div class="story-select__topline"><span>NOCTURNE ARCHIVES</span><i></i><span>SELECT A STORY</span></div>
+    <div class="story-select__heading">
+      <small>WELCOME TO THE NIGHT SHIFT</small>
+      <h1>Choose your door.</h1>
+      <p>Three places are waiting. Progress is saved separately in each story.</p>
+    </div>
+    <div class="story-grid">
+      <button class="story-card story-card--hotel" data-story="hotel">
+        <span class="story-card__number">01</span><span class="story-card__art"><i></i></span>
+        <span class="story-card__copy"><small>HOTEL NOCTURNE</small><strong>THE HOTEL</strong><em>Check in. Take the elevator straight to the fifth floor.</em><b data-story-progress="hotel">FLOOR 5 · ONLY FLOOR AVAILABLE</b></span>
+        <span class="story-card__play">ENTER <i>→</i></span>
+      </button>
+      <button class="story-card story-card--cabin" data-story="cabin">
+        <span class="story-card__number">02</span><span class="story-card__art"><i></i></span>
+        <span class="story-card__copy"><small>THE NORTH WOODS</small><strong>THE CABIN</strong><em>Repair the door. Follow the roots. Do not look back.</em><b data-story-progress="cabin">0 / 8 CHAPTERS</b></span>
+        <span class="story-card__play">ENTER <i>→</i></span>
+      </button>
+      <button class="story-card story-card--jailbreak" data-story="jailbreak">
+        <span class="story-card__number">03</span><span class="story-card__art"><i></i></span>
+        <span class="story-card__copy"><small>BLACKRIDGE PENITENTIARY</small><strong>JAILBREAK</strong><em>Watch the guard. Break security. Reach the road.</em><b data-story-progress="jailbreak">ACT 0 / 8</b></span>
+        <span class="story-card__play">ENTER <i>→</i></span>
+      </button>
+    </div>
+    <div class="story-select__footer"><span>CLICK A STORY TO BEGIN</span><span>YOUR PROGRESS SAVES AUTOMATICALLY</span></div>
+  </section>
   <button id="hint">LISTEN TO THE CABIN</button>
   <button id="story-lobby">STORY LOBBY</button>
   <button id="reset-game">RESET GAME</button>

@@ -60,4 +60,57 @@ dialog p{color:rgba(242,239,230,.72)!important;line-height:1.6}
 #combat-hud,#fun-hud,#maze-map-panel{border-color:rgba(210,165,94,.42)!important;background:rgba(5,7,10,.82)!important;box-shadow:0 0 24px rgba(0,0,0,.4),inset 0 0 16px rgba(210,165,94,.04)}
 #combat-hud h3,#fun-hud h3,#maze-map-panel h3{color:var(--ui-brass-bright)!important;letter-spacing:.12em}
 
+#eviction-hud{display:none;position:fixed;z-index:18;left:50%;top:92px;width:min(520px,calc(100vw - 32px));transform:translateX(-50%);padding:15px 18px 14px;border:1px solid rgba(255,244,193,.78);background:linear-gradient(120deg,rgba(246,246,238,.94),rgba(197,183,130,.84));box-shadow:0 0 60px rgba(255,255,238,.36),inset 0 0 24px rgba(255,255,255,.8);color:#171711;font-family:monospace;pointer-events:none;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px))}
+#eviction-hud.active{display:block;animation:eviction-hud-jolt .12s steps(2,end) 3}
+#eviction-hud small{display:block;margin-bottom:7px;color:#6a5d27;font:700 9px/1 monospace;letter-spacing:.23em}
+#eviction-hud>strong{display:block;font:900 27px/.95 Georgia,serif;letter-spacing:.07em}
+#eviction-hud>div{display:flex;justify-content:space-between;margin-top:10px;font:700 11px/1 monospace;letter-spacing:.13em}
+#eviction-hud>div b{color:#8a6713}
+#eviction-hud>i{display:block;height:4px;margin-top:9px;overflow:hidden;background:rgba(35,31,15,.2)}
+#eviction-progress{display:block;width:100%;height:100%;transform-origin:left;background:linear-gradient(90deg,#9a7416,#fff8b5);transition:transform .1s linear}
+#eviction-hud p{margin:9px 0 0;color:#332f20;font:10px/1.4 monospace;letter-spacing:.035em}
+#eviction-flash{position:fixed;z-index:16;inset:0;opacity:0;pointer-events:none;background:radial-gradient(circle at center,rgba(255,255,255,.08) 0,rgba(255,255,255,.55) 70%,#fff 100%);mix-blend-mode:screen;transition:opacity .12s}
+body.eviction-warning #eviction-flash{opacity:.45;animation:eviction-warning-flicker .22s steps(2,end) infinite}
+body.eviction-attack #eviction-flash{opacity:.15;background:repeating-linear-gradient(0deg,rgba(255,255,255,.14) 0,rgba(255,255,255,.14) 1px,transparent 1px,transparent 4px),radial-gradient(circle,transparent 20%,rgba(255,255,255,.55) 100%)}
+body.eviction-hit #eviction-flash{opacity:.75}
+body.hotel-hiding #game{filter:brightness(.28) saturate(.65)}
+body.hotel-hiding:after{content:'';position:fixed;z-index:14;inset:0;pointer-events:none;background:linear-gradient(90deg,#050403 0 31%,rgba(5,4,3,.92) 38%,rgba(5,4,3,.12) 48%,rgba(5,4,3,.12) 52%,rgba(5,4,3,.92) 62%,#050403 69% 100%),linear-gradient(180deg,#050403 0 22%,transparent 39% 62%,#050403 80% 100%);box-shadow:inset 0 0 90px 35px #000}
+body.hotel-hiding #prompt{z-index:19!important;border-color:rgba(220,188,120,.8)!important;background:rgba(4,3,3,.94)!important;color:#f0d89c!important}
+@keyframes eviction-warning-flicker{0%,100%{filter:brightness(1)}45%{filter:brightness(2.2)}52%{filter:brightness(.4)}}
+@keyframes eviction-hud-jolt{0%{transform:translateX(-50%)}50%{transform:translateX(calc(-50% + 4px))}}
+
 @media(max-width:800px){header{padding:0 15px!important}header:before{left:15px}.status:before{display:none}#room-number{display:none}nav{padding:0 12px!important}.caption{left:17px!important;top:151px!important;max-width:calc(100% - 35px)!important}.caption h1{font-size:39px!important}aside{left:17px!important;right:auto!important;top:auto!important;bottom:104px;width:calc(100% - 34px)!important;padding:12px 15px!important}#escape-badge{display:none}}
+
+body.story-select-mode #game{filter:saturate(.65) brightness(.46) blur(1px);transform:scale(1.008)}
+body.story-select-mode header,body.story-select-mode nav,body.story-select-mode .caption,body.story-select-mode aside,body.story-select-mode #crosshair,body.story-select-mode #prompt,body.story-select-mode #hint,body.story-select-mode #story-lobby,body.story-select-mode #reset-game,body.story-select-mode #escape-badge,body.story-select-mode #fun-hud{opacity:0!important;pointer-events:none!important}
+#story-select[hidden]{display:none}
+#story-select{position:fixed;z-index:40;inset:0;overflow:auto;padding:clamp(25px,4vh,54px) clamp(22px,5vw,76px) 30px;background:radial-gradient(circle at 50% 18%,rgba(122,89,53,.16),transparent 34%),linear-gradient(180deg,rgba(3,5,7,.45),rgba(3,4,6,.92));color:#f3eee2;font-family:Arial,sans-serif;isolation:isolate}
+#story-select:before{content:'';position:fixed;z-index:-1;inset:0;pointer-events:none;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(8.333% - 1px),rgba(255,255,255,.018) 8.333%);mask-image:linear-gradient(180deg,#000,transparent 80%)}
+.story-select__topline{display:flex;align-items:center;gap:15px;max-width:1180px;margin:0 auto;color:rgba(239,226,199,.52);font:700 9px/1 monospace;letter-spacing:.24em}
+.story-select__topline i{height:1px;flex:1;background:linear-gradient(90deg,rgba(203,165,98,.42),rgba(203,165,98,.07))}
+.story-select__heading{max-width:1180px;margin:clamp(34px,6vh,68px) auto 30px;text-align:center}
+.story-select__heading small{color:#c8a66b;font:700 10px/1 monospace;letter-spacing:.28em}
+.story-select__heading h1{margin:12px 0 9px;color:#f7f2e8;font:500 clamp(38px,5.2vw,74px)/.95 Georgia,serif;letter-spacing:-.045em;text-shadow:0 8px 45px #000;text-transform:uppercase}
+.story-select__heading p{margin:0;color:rgba(240,235,222,.58);font:12px/1.6 monospace;letter-spacing:.04em}
+.story-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,1.7vw,24px);max-width:1180px;margin:0 auto}
+.story-card{position:relative;display:grid;grid-template-rows:178px 1fr auto;min-height:430px;padding:0;overflow:hidden;border:1px solid rgba(212,181,126,.22);border-radius:4px;background:linear-gradient(165deg,rgba(25,25,25,.95),rgba(7,8,10,.98));box-shadow:0 24px 55px rgba(0,0,0,.44),inset 0 0 0 1px rgba(255,255,255,.025);color:#f2eee5;text-align:left;cursor:pointer;transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.story-card:hover,.story-card:focus-visible{z-index:2;outline:none;transform:translateY(-8px) scale(1.015);border-color:rgba(232,195,126,.78);box-shadow:0 30px 75px rgba(0,0,0,.65),0 0 32px rgba(184,126,60,.13),inset 0 0 0 1px rgba(255,255,255,.06)}
+.story-card__number{position:absolute;z-index:3;top:13px;left:15px;display:grid;place-items:center;width:36px;height:36px;border:1px solid rgba(242,214,162,.55);background:rgba(5,6,7,.64);color:#efd7a7;font:700 11px/1 monospace;letter-spacing:.08em;backdrop-filter:blur(7px)}
+.story-card__art{position:relative;display:block;overflow:hidden;border-bottom:1px solid rgba(222,190,130,.22);background:#171719}
+.story-card__art:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(5,6,8,.76)),repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0,rgba(255,255,255,.018) 1px,transparent 1px,transparent 4px);box-shadow:inset 0 -25px 40px rgba(0,0,0,.55)}
+.story-card--hotel .story-card__art{background:radial-gradient(circle at 50% 38%,rgba(246,197,112,.3),transparent 4%),linear-gradient(90deg,transparent 0 19%,#31251d 19% 21%,#6d5836 21% 23%,#211a17 23% 49.5%,#0b0909 49.5% 50.5%,#211a17 50.5% 77%,#6d5836 77% 79%,#31251d 79% 81%,transparent 81%),linear-gradient(#4b3828,#171313)}
+.story-card--hotel .story-card__art:before{content:'5';position:absolute;left:50%;top:28px;transform:translateX(-50%);color:#e7c77f;font:700 18px/1 Georgia,serif;text-shadow:0 0 18px #d29e4e;z-index:1}
+.story-card--cabin .story-card__art{background:linear-gradient(150deg,transparent 0 38%,#191411 39% 61%,transparent 62%),linear-gradient(210deg,transparent 0 38%,#211913 39% 61%,transparent 62%),radial-gradient(circle at 51% 64%,#d69b4e 0 3%,#5e361b 4% 13%,transparent 14%),linear-gradient(#20282a,#08090a 70%)}
+.story-card--cabin .story-card__art:before{content:'';position:absolute;left:22%;right:22%;bottom:0;height:55%;background:linear-gradient(90deg,#2a1e17 0 15%,#0a0807 15% 85%,#2a1e17 85%);box-shadow:0 0 28px rgba(189,123,50,.18)}
+.story-card--jailbreak .story-card__art{background:repeating-linear-gradient(90deg,transparent 0 13%,#2f3638 13% 16%,transparent 16% 27%),linear-gradient(180deg,#263136,#0b0e10)}
+.story-card--jailbreak .story-card__art:before{content:'';position:absolute;left:0;right:0;top:45%;height:9px;background:#41494b;box-shadow:0 38px #2c3234,-1px -38px #2c3234}
+.story-card__copy{display:flex;flex-direction:column;padding:25px 24px 20px}
+.story-card__copy small{color:#bf9b61;font:700 9px/1 monospace;letter-spacing:.19em}
+.story-card__copy strong{margin:8px 0 12px;color:#fff;font:600 clamp(25px,2.6vw,38px)/1 Georgia,serif;letter-spacing:-.025em}
+.story-card__copy em{min-height:42px;color:rgba(239,234,222,.58);font:normal 11px/1.55 monospace}
+.story-card__copy b{align-self:flex-start;margin-top:auto;padding-top:17px;color:rgba(229,206,164,.72);font:700 9px/1 monospace;letter-spacing:.13em}
+.story-card__play{display:flex;align-items:center;justify-content:space-between;margin:0 24px;padding:16px 0 18px;border-top:1px solid rgba(220,188,130,.19);color:#e4c58e;font:700 10px/1 monospace;letter-spacing:.2em}
+.story-card__play i{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#b98b4e;color:#101010;font:normal 17px/1 Arial;transition:transform .2s,background .2s}
+.story-card:hover .story-card__play i{transform:translateX(4px);background:#f0cd8d}
+.story-select__footer{display:flex;justify-content:space-between;max-width:1180px;margin:25px auto 0;color:rgba(232,219,194,.35);font:9px/1 monospace;letter-spacing:.18em}
+@media(max-width:780px){#story-select{padding:24px 16px 34px}.story-select__heading{margin:35px auto 25px}.story-grid{grid-template-columns:1fr;max-width:440px}.story-card{grid-template-columns:38% 1fr;grid-template-rows:1fr auto;min-height:220px}.story-card__art{grid-row:1/3;border-bottom:0;border-right:1px solid rgba(222,190,130,.22)}.story-card__copy{padding:22px 18px}.story-card__copy strong{font-size:28px}.story-card__play{grid-column:2;margin:0 18px}.story-select__footer{max-width:440px;gap:20px}.story-select__footer span:last-child{text-align:right}}

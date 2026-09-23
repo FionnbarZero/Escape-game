@@ -16,6 +16,7 @@ Then open `http://localhost:8000`. An internet connection is needed to load the 
 - Select rooms from the navigation bar.
 - Move with **WASD** or the arrow keys and look with the mouse.
 - Hold **Shift** to sprint, press **Space** to jump, and hold **C** or **Ctrl** to crouch in every room.
+- While moving, hold **Shift** and press **C** or **Ctrl** to perform a short slide.
 - Aim at a puzzle object and press **E** or left-click to interact.
 - Press **Escape** to release or recapture the mouse.
 - Search the Main Cabin for three brass pieces of the broken door handle.
@@ -39,9 +40,9 @@ After finding the metal spoon, use it to pick the security-vent lock by turning 
 
 The second Jailbreak area is an explorable broken cellblock. Jump over floor holes, enter open cells, dig through one loose floor for code `2174`, use the keypad to enter the evidence room, collect the brass key, and unlock the north gate at the end of the hall.
 
-Each story is an independent navigation branch. Number keys **1–8** are cabin-only room shortcuts; number keys are disabled inside Infinite Hotel and Jailbreak so they cannot switch stories accidentally. Use **Story Lobby** to change branches.
+Each story is an independent navigation branch. The game now opens directly in the Story Lobby with a full-screen three-card selector for **The Hotel**, **The Cabin**, and **Jailbreak**. Number keys **1–8** are cabin-only room shortcuts; number keys are disabled inside Infinite Hotel and Jailbreak so they cannot switch stories accidentally. Use **Story Lobby** to return to the selector.
 
-The opening Story Lobby doors are recessed into the back wall with thick architectural frames, headers, stone thresholds, and floor paths, so none of the three story entrances appear to float.
+The Story Lobby remains rendered behind the selector as a dark 3D lobby with recessed doors, architectural frames, stone thresholds, and floor paths.
 
 The Infinite Hotel is populated by guests, bellhops, housekeepers, reception staff, an elevator operator, and the hotel manager. Aim at a person and press **E** to speak. In the elevator room, aim at the four physical floor buttons and press **E** to enter `13 → -4 → ½ → ∞`.
 
@@ -49,25 +50,25 @@ Hotel characters have distinct faces, skin tones, hair, uniforms, walking animat
 
 The hotel has its own horror dressing: bloody footprints, scratched warnings, covered shapes on abandoned luggage carts, watching portraits, and low red lighting. Whenever characters stop walking, they silently turn to stare at the player.
 
-In the Hotel Nocturne lobby, the Room 13 key is not initially on the counter. Ring the service bell and watch the bellhop walk over and hand the key to you.
+In the Hotel Nocturne lobby, the Floor 5 access key is not initially on the counter. Ring the service bell and watch the bellhop walk over and hand it to you. Floor 5 is the elevator’s only working destination.
 
-The lobby also has an explorable staff storage room filled with shelves, linens, a housekeeping cart, and an unclaimed suitcase. In the first hotel area, the old Room 13 doorway is now a door labeled **Entrance to the Staircase**. The first staircase visit is a smaller, clean, normally lit hotel stairwell with close-set carpeted steps, brass rails, wall molding, lamps, and Rooms 13–16. It contains no bloody horror dressing. A return door leads back to the lobby.
+The lobby also has an explorable staff storage room filled with shelves, linens, a housekeeping cart, and an unclaimed suitcase. Once the bellhop gives you the Floor 5 access key, the elevator travels directly to Floor 5; the guestbook and staff directory remain optional story details. The adjacent emergency staircase is a continuous five-floor stairway: every flight meets a solid landing, every floor door is physically attached to its landing, and the player can climb or descend without crossing gaps. Floors 1–4 are reachable but locked; only the Floor 5 guest-suite door opens. Press **E** directly in front of that door to enter the furnished suite.
 
-The first staircase visit is also a safe atmosphere zone: random power failures, whisper overlays, watching-eye flashes, and composure-loss scares are disabled until the player enters the later Room 16 sequence.
+The connected staircase is a safe atmosphere zone: random power failures, whisper overlays, watching-eye flashes, and composure-loss scares are disabled there.
 
-Every square-stairwell step and landing has solid traversal geometry. Players rise onto each step, can stand on the landings, jump, and descend without passing through the staircase.
+Every stair and landing has solid traversal geometry. The elevator arrives beside the top landing on Floor 5, while the lobby stair entrance begins at Floor 1.
 
-The endless stairwell walls contain hotel doors numbered 13 through 104 at different heights. Each has a brass frame and handle and can be examined for an unsettling response.
+The former floating numbered doors and disconnected high entrances have been removed from the active route. Floor labels now correspond to actual landings, and the only available destination is Floor 5.
 
-Room 16 begins as an ordinary guest room with three tasks involving its bed, wardrobe, and telephone. Completing them powers its elevator, which descends to a blocked staircase where a monster emerges. Escaping through the stair door unfolds a much larger vertical parkour area; falling to the bottom wakes the monster and forces the player to run before climbing again.
+The Floor 5 door opens directly into a furnished guest suite instead of transporting you into another hallway. The suite contains a searchable suitcase, an enterable wardrobe, an enterable closet, and an exit into the numbered-room run; its layout, color scheme, and special furnishing are randomized for each new session. Aim at either hiding place and press **E** to enter, then press **E** again to leave. Older saves already inside the repeating hallway are also routed into the Floor 5 suite when the correct door opens.
 
-The repeating hotel hallway is now nearly twice as long, with many more numbered doors and three clearly marked jump-or-crouch obstacles. Room 13 is fully enterable from the stairwell after receiving its key and contains a furnished guest room, a searchable suitcase, and a return door.
+Leaving the Floor 5 guest suite begins the numbered-room hotel run: three wings with four rooms each. Every room contains a wardrobe and closet that the player can physically hide inside. Search desks, carts, paintings, cupboards, mirrors, guestbooks, closets, and safes to recover room keys, maintenance tools, and elevator passes. Every exit stays locked until the current room gives up its required item; the final safe contains the master hotel key.
 
-Leaving Room 13 begins the new numbered-room hotel run: three floors with four rooms each. Search desks, carts, paintings, cupboards, mirrors, guestbooks, closets, and safes to recover room keys, maintenance tools, and elevator passes. Every exit stays locked until the current room gives up its required item; the final safe contains the master hotel key.
+The numbered-room run includes **The Eviction / The Cleanse**, a one-time sterile event. Fluorescent-white lights and panicking staff warn of its arrival before a floating cluster of broken porcelain faces, golden eyes, and architectural gears bleaches the room from the ceiling. Normal beds and closets are vaporized in its line of sight. Survive by pressing **E** at the mirror to reflect its light, crouching completely inside a marked deep shadow, or holding **Shift** while running past the Mimic Armchair so the Entity cleanses it first and grants a three-second escape window.
 
-Each new browser game session randomizes the puzzle clues, hotel search locations, boss variant, and boss response sequence. The hotel staff now turn in the direction they are walking, and the intro handoff enters the Story Lobby directly after the final opening prompt.
+Each new browser game session randomizes the puzzle clues, hotel search locations, boss variant, and boss response sequence. The hotel staff turn in the direction they are walking, and the game spawns directly in the Story Lobby.
 
-The opening sequence now places you directly inside the Main Cabin. The renderer automatically uses a lighter performance mode on lower-power devices to reduce stutter.
+Selecting **The Cabin** places you directly inside the Main Cabin. The renderer automatically uses a lighter performance mode on lower-power devices to reduce stutter.
 
 Every playable room contains an optional glowing Courage Shard. Aim at it and press **E** to collect it, restore composure, and increase the persistent shard counter.
 
