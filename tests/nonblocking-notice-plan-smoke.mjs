@@ -2,7 +2,8 @@ import fs from 'node:fs';
 
 const html=fs.readFileSync(new URL('../index.html',import.meta.url),'utf8');
 const css=fs.readFileSync(new URL('../escape-ui.css',import.meta.url),'utf8');
-const source=fs.readFileSync(new URL('../three-game.js',import.meta.url),'utf8');
+import { readGameSource } from './source-bundle.mjs';
+const source=readGameSource();
 
 if(!html.includes('id="game-notice"')||!html.includes('aria-live="polite"'))throw new Error('The non-blocking game notice is missing or inaccessible');
 if(!css.includes('#game-notice{')||!css.includes('#game-notice.active{'))throw new Error('The bottom-screen notice styling is missing');

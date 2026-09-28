@@ -34,7 +34,7 @@ await wait(150);
 const recharged=await evaluate(`(()=>{const inventory=JSON.parse(localStorage.getItem('escape-usable-inventory'));return{charge:inventory.flashlightCharge,on:inventory.flashlightOn,batteries:inventory.batteries,label:document.querySelector('[data-item="flashlight"] span')?.textContent,prompt:document.querySelector('#prompt').textContent}})()`);
 if(recharged.charge<99||!recharged.on||recharged.batteries!==0||!recharged.label?.includes('100%')||!recharged.prompt.includes('100%'))throw new Error('Battery did not recharge the flashlight: '+JSON.stringify(recharged));
 
-const sourceCheck=await evaluate(`fetch('three-game.js',{cache:'no-store'}).then(response=>response.text()).then(source=>({beam:source.includes('new THREE.SpotLight(0xffedc2,240,100'),drain:source.includes('FLASHLIGHT_DRAIN_PER_SECOND=.8'),empty:source.includes('FLASHLIGHT DEAD')}))`);
+const sourceCheck=await evaluate(`Promise.all(__GAME_SOURCE_FILES__.map(filename=>fetch('game/'+filename,{cache:'no-store'}).then(response=>response.text()))).then(parts=>parts.join('\\n')).then(source=>({beam:source.includes('new THREE.SpotLight(0xffedc2,240,100'),drain:source.includes('FLASHLIGHT_DRAIN_PER_SECOND=.8'),empty:source.includes('FLASHLIGHT DEAD')}))`);
 if(!sourceCheck.beam||!sourceCheck.drain||!sourceCheck.empty)throw new Error('Enhanced flashlight configuration is missing: '+JSON.stringify(sourceCheck));
 const unexpectedExceptions=exceptions.filter(error=>!error.includes('user gesture is required to request Pointer Lock'));
 if(unexpectedExceptions.length)throw new Error('Browser exceptions: '+unexpectedExceptions.join(' | '));

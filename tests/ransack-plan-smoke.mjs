@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 
-const source=fs.readFileSync(new URL('../three-game.js',import.meta.url),'utf8');
+import { readGameSource } from './source-bundle.mjs';
+const source=readGameSource();
 const html=fs.readFileSync(new URL('../index.html',import.meta.url),'utf8');
 const css=fs.readFileSync(new URL('../escape-ui.css',import.meta.url),'utf8');
 
@@ -15,7 +16,7 @@ const requirements=[
  ['frame update','updateRansack(dt,time)']
 ];
 for(const [name,needle] of requirements)if(!source.includes(needle))throw new Error(`Missing ${name}`);
-if(!source.includes("eviction||noise||hotelNoiseArc||pursuer||collector||clockmaker||drowned"))throw new Error('Ransack is not excluded from major encounters');
+if(!source.includes("eviction||noise||hotelNoiseArc||pursuer||molly||collector||clockmaker||drowned"))throw new Error('Ransack is not excluded from major encounters, including Molly');
 if(!source.includes("hotelSideScene==='floor5-transition'")||!source.includes("[1,3,5,7,9].includes(floorOne.phase)")||!source.includes("[1,3,5,18].includes(floorTwo.phase)"))throw new Error('Ransack is not limited to ordinary generated hotel exploration');
 if(!source.includes('I was never trying to kill you'))throw new Error('Ransack does not reveal his non-lethal intent');
 if(!html.includes('id="ransack-hud"')||!html.includes('id="admin-ransack"'))throw new Error('Ransack HUD or admin control is missing');

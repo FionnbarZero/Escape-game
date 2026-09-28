@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 
-const source=fs.readFileSync(new URL('../three-game.js',import.meta.url),'utf8');
+import { readGameSource } from './source-bundle.mjs';
+const source=readGameSource();
 const readme=fs.readFileSync(new URL('../README.md',import.meta.url),'utf8');
 
 const requirements=[

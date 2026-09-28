@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 
-const source=fs.readFileSync(new URL('../three-game.js',import.meta.url),'utf8');
+import { readGameSource } from './source-bundle.mjs';
+const source=readGameSource();
 const definition=source.match(/function randomRoomMonsterPlan[\s\S]*?\n\}/)?.[0];
 if(!definition)throw new Error('Random-room monster planner was not found');
 if(!source.includes('run.randomMonsterCooldown=2'))throw new Error('Random-room monster cooldown is missing');
