@@ -77,6 +77,12 @@
     <i><span id="floor-two-battery"></span></i>
     <p id="floor-two-status">FLASHLIGHT 100% · WEATHER CALM</p>
   </section>
+  <section id="ransack-hud" aria-live="assertive" aria-hidden="true">
+    <small>THE THREE ANGELS // HOSTILE TEST</small>
+    <div><span id="ransack-sign">STOP</span><strong>RANSACK</strong><b id="ransack-time">03.0</b></div>
+    <i><span id="ransack-progress"></span></i>
+    <p id="ransack-instruction">Release every movement key before the sign expires.</p>
+  </section>
   <div id="floor-two-weather" aria-hidden="true"><i></i><b></b></div>
   <section id="noise-drawer" aria-live="polite">
     <small>SLOW INTERACTION</small><strong>OPENING DRAWER</strong>
@@ -153,6 +159,7 @@
     </select></label>
     <div class="admin-actions"><button id="admin-spawn">SPAWN</button><button id="admin-clear-monsters">CLEAR</button></div>
     <button id="admin-invincible" aria-pressed="false">INFINITE HEALTH · OFF</button>
+    <button id="admin-ransack">TRIGGER RANSACK</button>
     <label>ITEM<select id="admin-item"></select></label><button id="admin-give-item">GIVE ITEM</button>
     <p>F2 opens this panel. Every creature has its own hunt pattern and stays grounded on the room geometry. The Purge, Cable Mass, and Reflection are the only spawned monsters that intentionally phase through walls.</p>
   </section>
