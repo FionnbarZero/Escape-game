@@ -15,8 +15,13 @@ const required=[
  ['physical computer travel',"phase==='computer-travel'"],
  ['deliberate terminal hack',"phase==='hack'"],
  ['linked door completion','hackMollyComputer(molly.targetComputer)'],
- ['wire hair rig','const wires=[];for(let index=0;index<16;index++)'],
- ['hand-driven flare pose',"shoulder.rotation.z=-1.48*fan"],
+ ['Teller-inspired tailored silhouette',"skirt.name='Molly tailored service skirt'"],
+ ['Teller-inspired service chassis',"chassis.name='Molly office-chair chassis'"],
+ ['wire hair rig','const wires=[];for(let index=0;index<18;index++)'],
+ ['articulated hair-flip elbow',"elbow.name='Molly articulated elbow'"],
+ ['articulated hair-flip wrist',"wrist.name='Molly articulated wrist'"],
+ ['staged hand-driven flare pose',"progress<.31?'hand-up'"],
+ ['physical wire lift after hand reaches hair','rightGrip=wire.side>0?pose.grip:0'],
  ['four flare intensities',"startMollyFlare('final'"],
  ['sound location memory','molly.lastSound=[position.x??position[0],0,position.z??position[2]]'],
  ['sound strength memory','molly.soundStrength=strength'],
@@ -50,4 +55,4 @@ if(!source.includes("The computer number on Molly\u2019s face identifies her des
 if(!source.includes("const open=!molly.hacked.includes(computer)||molly.overridden.includes(computer)"))throw new Error('Linked shutters do not begin open and close only after Molly hacks them');
 if(source.includes('LEVER ${index+1} HAS NO POWER'))throw new Error('A physically reached lever is still arbitrarily gated by a computer override');
 
-console.log(JSON.stringify({monster:'Molly',layout:'reception + connected loops + three lever rooms + final switch room',face:'00 or selected computer',terminals:6,wireBundles:16,cameraFeeds:6,droneRoutes:4,intercom:'marked and crouch-safe',shortcuts:['drone latch','hammer window'],leverProgress:'permanent',shutters:'open until hacked',exit:'walk-through protected corridor',noiseOverlap:false},null,2));
+console.log(JSON.stringify({monster:'Molly',appearance:'Teller-inspired tailored service silhouette',hairFlip:'articulated hand-up + grip + flick + cable settle',layout:'reception + connected loops + three lever rooms + final switch room',face:'00 or selected computer',terminals:6,wireBundles:18,cameraFeeds:6,droneRoutes:4,intercom:'marked and crouch-safe',shortcuts:['drone latch','hammer window'],leverProgress:'permanent',shutters:'open until hacked',exit:'walk-through protected corridor',noiseOverlap:false},null,2));
