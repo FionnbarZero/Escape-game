@@ -8,6 +8,8 @@ const manifest=fs.readFileSync(new URL('../game/manifest.js',import.meta.url),'u
 
 const required=[
  ['Molly source module',"'18-molly.js'"],
+ ['camera controller inventory entry',"'camera-controller':{label:'Camera / Door Controller'"],
+ ['three distinct held tools',"else if(id==='camera-controller')"],
  ['Electrical Section entry',"part==='electrical-section'"],
  ['Molly interaction dispatch',"handleMolly(data.part,hit.object)"],
  ['normal 00 display',"display:'00'"],
@@ -35,11 +37,19 @@ const required=[
  ['crouch-safe intercom rule','!crouched&&intercom.cooldown<=0'],
  ['six labeled camera feeds','MOLLY_CAMERA_FEEDS'],
  ['camera player-position preservation','cameraView?.playerPosition'],
+ ['camera ordinary-door access','function remoteOpenMollyCameraDoor()'],
+ ['hacked-door remote refusal',"OVERRIDE REQUIRED · GET THE CODE"],
+ ['restored camera access after override',"RESTORE CAMERA / DOOR ACCESS"],
+ ['camera use does not suppress intercoms',"const crouched=molly.cameraView?.playerCrouched??"],
  ['drone inspection routes','MOLLY_DRONE_ROUTES'],
+ ['physical controllable drone','function updateMollyDrone(dt,time)'],
  ['drone shortcut latch','function openMollyDroneLatch()'],
+ ['drone proximity service control','function useMollyDroneService()'],
+ ['drone location distraction',"mollyHearSound(mollyDroneEntity.position.clone(),1,'the drone beep')"],
+ ['drone recovery dock','function recallMollyDrone()'],
  ['hammer shortcut collision','Molly breakable window blocker'],
  ['reinforced window distinction','reinforced observation window'],
- ['persistent player override','MOLLY CANNOT UNDO IT'],
+ ['persistent player override','OVERRIDE HOLDS · USE THE CAMERA CONTROLLER'],
  ['permanent lever progress','function updateMollyProgressBoard()'],
  ['walk-through protected exit',"beginHotelRoomPassage(trigger,leaveMollySection)"],
  ['final control loss','molly.finalControlLost=true'],
@@ -52,7 +62,8 @@ if(!html.includes('value="molly-electrical"')||!html.includes('value="molly"'))t
 if(!source.includes('cancelNoise();cancelHotelNoiseArc();'))throw new Error('Molly does not suppress overlapping Noise encounters');
 if(!source.includes("molly=fresh?newMollyRun(origin):loadMolly(origin)"))throw new Error('Molly lacks a persistent encounter checkpoint');
 if(!source.includes("The computer number on Molly\u2019s face identifies her destination; it is not the code."))throw new Error('Computer identity and unlock codes are not clearly separated');
-if(!source.includes("const open=!molly.hacked.includes(computer)||molly.overridden.includes(computer)"))throw new Error('Linked shutters do not begin open and close only after Molly hacks them');
+if(!source.includes("const open=molly.hacked.includes(computer)?false:molly.overridden.includes(computer)?molly.linkedDoorsOpened.includes(computer):true"))throw new Error('Linked shutters do not distinguish hacked, restored, and remotely opened states');
 if(source.includes('LEVER ${index+1} HAS NO POWER'))throw new Error('A physically reached lever is still arbitrarily gated by a computer override');
+if(source.includes('SHORTCUT LATCH RELEASED · AUTO-RECALL'))throw new Error('The drone still teleports through a preset route and opens the latch automatically');
 
-console.log(JSON.stringify({monster:'Molly',appearance:'Teller-inspired tailored service silhouette',hairFlip:'articulated hand-up + grip + flick + cable settle',layout:'reception + connected loops + three lever rooms + final switch room',face:'00 or selected computer',terminals:6,wireBundles:18,cameraFeeds:6,droneRoutes:4,intercom:'marked and crouch-safe',shortcuts:['drone latch','hammer window'],leverProgress:'permanent',shutters:'open until hacked',exit:'walk-through protected corridor',noiseOverlap:false},null,2));
+console.log(JSON.stringify({monster:'Molly',appearance:'Teller-inspired tailored service silhouette',hairFlip:'articulated hand-up + grip + flick + cable settle',tools:['Nocturne maintenance hammer','camera / door controller','inspection drone controller'],cameraController:['six live feeds','ordinary remote access doors','hacked shutter refusal','post-override remote opening'],drone:['physical movement','service control','location beep','instant lower','recovery dock'],layout:'reception + connected loops + three lever rooms + final switch room',face:'00 or selected computer',terminals:6,wireBundles:18,cameraFeeds:6,droneRoutes:4,intercom:'marked and crouch-safe even while viewing controllers',shortcuts:['drone latch','hammer window'],leverProgress:'permanent',shutters:'open until hacked',exit:'walk-through protected corridor',noiseOverlap:false},null,2));

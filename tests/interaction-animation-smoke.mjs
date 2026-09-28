@@ -14,7 +14,7 @@ const wait=milliseconds=>new Promise(resolve=>setTimeout(resolve,milliseconds));
 
 await send('Runtime.enable');
 await send('Page.enable');
-await evaluate(`(()=>{localStorage.removeItem('escape-admin-items');localStorage.removeItem('infinite-hotel-arrival-items');localStorage.removeItem('escape-usable-inventory');location.reload()})()`);
+await evaluate(`(()=>{localStorage.removeItem('escape-admin-items');localStorage.removeItem('infinite-hotel-arrival-items');localStorage.removeItem('escape-usable-inventory');sessionStorage.removeItem('infinite-hotel-run-items');location.reload()})()`);
 for(let attempt=0;attempt<150;attempt++){
  if(await evaluate(`typeof document.querySelector('#admin-teleport-go')?.onclick==='function'`))break;
  await wait(200);
