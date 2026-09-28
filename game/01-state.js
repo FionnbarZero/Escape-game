@@ -13,7 +13,7 @@ let collector=null,collectorEntity=null,collectorItems=new Map(),collectorDecoys
 let clockmaker=null,clockmakerEntity=null,clockmakerPendulums=[],clockmakerGears=[],clockmakerPlatforms=[],clockmakerClocks=[],clockmakerAlcoves=[],clockmakerDebris=[],clockmakerMasterHands=null,clockmakerLavaFloor=null;
 let drowned=null,drownedEntity=null,drownedWater=null,drownedWake=null,drownedPlatforms=[],drownedBarriers=[];
 let pursuer=null,pursuerEntity=null,pursuerHazards=[],pursuerGates=[],pursuerExitPassageTrigger=null,pursuerCompletedScenes=new Set((()=>{try{return JSON.parse(localStorage.getItem('infinite-hotel-pursuer-scenes-v2')||'[]')}catch{return[]}})());
-let molly=null,mollyEntity=null,mollyComputers=[],mollyIntercoms=[],mollyDoors=[],mollyLevers=[],mollyCameraReturn=null;
+let molly=null,mollyEntity=null,mollyComputers=[],mollyIntercoms=[],mollyDoors=[],mollyLevers=[],mollyCameras=[],mollyFans=[],mollyProgressLights=[],mollyFinalStatus=null,mollyCameraReturn=null;
 let ransack={phase:'waiting',cooldown:14,timer:0,deadline:0,stillStarted:0,stillTime:0,resolveTimer:0,collected:0,total:3,eventRoomGroup:null,lastPosition:new THREE.Vector3(),appearances:Number(sessionStorage.getItem('hotel-ransack-appearances')||0)},ransackEntity=null,ransackCollectibles=[];
 let adminInvincible=false,adminMonsters=[],bashSpawnHandle=null,randomRoomMonsterHandle=null,adminHitCooldown=0,adminGrantedItems=new Set(JSON.parse(localStorage.getItem('escape-admin-items')||'[]'));
 const ADMIN_MONSTER_CATALOG={
