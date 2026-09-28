@@ -122,6 +122,10 @@ body.purge-choking #eviction-flash{opacity:.3;background:radial-gradient(circle,
 body.hotel-hiding #game{filter:brightness(.28) saturate(.65)}
 body.hotel-hiding:after{content:'';position:fixed;z-index:14;inset:0;pointer-events:none;background:linear-gradient(90deg,#050403 0 31%,rgba(5,4,3,.92) 38%,rgba(5,4,3,.12) 48%,rgba(5,4,3,.12) 52%,rgba(5,4,3,.92) 62%,#050403 69% 100%),linear-gradient(180deg,#050403 0 22%,transparent 39% 62%,#050403 80% 100%);box-shadow:inset 0 0 90px 35px #000}
 body.hotel-hiding #prompt{z-index:19!important;border-color:rgba(220,188,120,.8)!important;background:rgba(4,3,3,.94)!important;color:#f0d89c!important}
+body.hotel-hiding-transition #game{filter:brightness(.55) saturate(.72);animation:closet-entry-shift .72s ease-in-out}
+body.hotel-hiding-transition:after{content:'';position:fixed;z-index:14;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(3,3,3,.82),transparent 36% 64%,rgba(3,3,3,.82));animation:closet-door-vignette .72s ease-in-out}
+@keyframes closet-entry-shift{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+@keyframes closet-door-vignette{0%,100%{opacity:0}50%{opacity:1}}
 #purge-quiet{display:none;position:fixed;z-index:22;left:50%;bottom:92px;width:min(360px,calc(100vw - 34px));padding:14px 16px 15px;transform:translateX(-50%);border:1px solid rgba(221,104,45,.85);background:linear-gradient(145deg,rgba(16,10,7,.96),rgba(48,20,10,.94));box-shadow:0 0 42px rgba(230,73,22,.3),inset 0 0 24px rgba(255,92,22,.08);color:#ead8bd;font-family:monospace;text-align:center;pointer-events:none}
 #purge-quiet.active{display:block;animation:purge-panel-shake .1s steps(2,end) infinite}
 #purge-quiet small{display:block;color:#bf6e3e;font:700 9px/1 monospace;letter-spacing:.2em}

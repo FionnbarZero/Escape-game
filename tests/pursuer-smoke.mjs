@@ -14,6 +14,8 @@ const wait=milliseconds=>new Promise(resolve=>setTimeout(resolve,milliseconds));
 
 await send('Runtime.enable');
 await send('Page.enable');
+await send('Page.bringToFront');
+await send('Emulation.setFocusEmulationEnabled',{enabled:true});
 await send('Page.reload',{ignoreCache:true});
 exceptions.length=0;
 for(let attempt=0;attempt<150;attempt++){
@@ -23,25 +25,28 @@ for(let attempt=0;attempt<150;attempt++){
  if(attempt===149)throw new Error('Game module did not finish initializing');
 }
 
-const phaseChecks=[
- ['pursuer-reveal','THE OPEN CORRIDOR','THE REVEAL',1],
- ['pursuer-run','SERVICE CORRIDOR · RUN','THE RUN',2],
- ['pursuer-escape','SECURITY SHUTTER','LAST-SECOND ESCAPE',3]
+const sceneChecks=[
+ ['pursuer-guest','GUEST WING · THE LAST LIGHT','CHASE 1 · REVEAL',1],
+ ['pursuer-laundry','SERVICE LAUNDRY · THE MOVING SHEET','CHASE 2 · REVEAL',2],
+ ['pursuer-mirror','MIRROR CORRIDOR · THE REFLECTION BEHIND YOU','CHASE 3 · REVEAL',3],
+ ['pursuer-exterior','SEVERED FAÇADE · BEHIND THE GLASS','CHASE 4 · REVEAL',4],
+ ['pursuer-baggage','BAGGAGE TERMINAL · THE SORTING BARRIER','CHASE 5 · REVEAL',5],
+ ['pursuer-executive','EXECUTIVE SERVICE WING · THE FROSTED GLASS','CHASE 6 · REVEAL',6]
 ];
-const phases=[];
-for(const [destination,expectedTitle,expectedPhase,expectedStage] of phaseChecks){
+const scenes=[];
+for(const [destination,expectedTitle,expectedPhase,expectedScene] of sceneChecks){
  await evaluate(`(()=>{document.dispatchEvent(new KeyboardEvent('keydown',{code:'F2',bubbles:true}));const select=document.querySelector('#admin-teleport');select.value=${JSON.stringify(destination)};document.querySelector('#admin-teleport-go').onclick()})()`);
  await wait(180);
  const state=await evaluate(`(()=>({title:document.querySelector('#title').textContent,phase:document.querySelector('#boss-phase').textContent,boss:document.querySelector('#boss-hud').classList.contains('active'),noise:document.querySelector('#noise-hud').classList.contains('active'),run:JSON.parse(sessionStorage.getItem('infinite-hotel-pursuer'))}))()`);
- if(state.title!==expectedTitle||state.phase!==expectedPhase||state.run?.phase!==expectedStage||!state.boss||state.noise)throw new Error('Pursuer phase failed: '+JSON.stringify({destination,state}));
- phases.push(state.run.phase);
+ if(state.title!==expectedTitle||state.phase!==expectedPhase||state.run?.phase!==1||state.run?.scene!==expectedScene||state.run?.origin!=='admin'||!state.boss||state.noise)throw new Error('Pursuer scene failed: '+JSON.stringify({destination,state}));
+ scenes.push(state.run.scene);
 }
 await evaluate(`(()=>{document.dispatchEvent(new KeyboardEvent('keydown',{code:'F2',bubbles:true}));const select=document.querySelector('#admin-teleport');select.value='room140';document.querySelector('#admin-teleport-go').onclick()})()`);
 await wait(180);
-const controls=await evaluate(`(()=>({teleports:[...document.querySelector('#admin-teleport').options].filter(option=>option.value.startsWith('pursuer-')).map(option=>option.value),monster:[...document.querySelector('#admin-monster').options].some(option=>option.value==='pursuer'),route:document.querySelector('#title').textContent==='Room 150 · Safe Vault'&&document.querySelector('#description').textContent.includes('security corridor')}))()`);
-if(controls.teleports.length!==3||!controls.monster||!controls.route)throw new Error('Pursuer controls or Room 150 route are incomplete: '+JSON.stringify(controls));
+const controls=await evaluate(`(()=>({teleports:[...document.querySelector('#admin-teleport').options].filter(option=>option.value.startsWith('pursuer-')).map(option=>option.value),monster:[...document.querySelector('#admin-monster').options].some(option=>option.value==='pursuer'),safe:document.querySelector('#title').textContent==='Room 150 · Safe Vault'&&document.querySelector('#description').textContent.includes('cannot enter this room')&&!document.querySelector('#description').textContent.includes('security corridor')}))()`);
+if(controls.teleports.length!==6||!controls.monster||!controls.safe)throw new Error('Pursuer controls or safe vault guarantee are incomplete: '+JSON.stringify(controls));
 const unexpectedExceptions=exceptions.filter(error=>!error.includes('user gesture is required to request Pointer Lock'));
 if(unexpectedExceptions.length)throw new Error('Browser exceptions: '+unexpectedExceptions.join(' | '));
 
 socket.close();
-console.log(JSON.stringify({boss:'THE PURSUER',phases,adminTeleports:controls.teleports.length,monsterSpawnOption:controls.monster,noiseMeter:'disabled'},null,2));
+console.log(JSON.stringify({boss:'THE PURSUER',scenes,adminTeleports:controls.teleports.length,monsterSpawnOption:controls.monster,noiseMeter:'disabled',safeVault:'protected'},null,2));
