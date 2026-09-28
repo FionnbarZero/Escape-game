@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="escape-ui.css">
   <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
 </head>
-<body>
+<body class="story-select-mode">
   <canvas id="game"></canvas>
   <div id="escape-badge"><span>ESCAPE PROTOCOL</span><strong>RUN ACTIVE</strong></div>
   <header><div class="brand"><b>C</b><span>THE CABIN<br>THAT WATCHES</span></div><div class="status"><strong id="count">0 / 8</strong></div><div id="room-number"><span>ASSIGNED ROOM</span><strong>—</strong></div></header>
@@ -20,44 +20,142 @@
   <div id="crosshair">+</div><div id="prompt">WASD MOVE · SHIFT SPRINT · SPACE JUMP · C/CTRL CROUCH · SHIFT+C SLIDE · E INTERACT</div>
   <div id="combat-hud">SPIDER HITS: <strong id="creature-hits">0 / 5</strong></div>
   <div id="fun-hud">COURAGE SHARDS <strong id="fun-count">0</strong></div>
+  <section id="inventory-hud" aria-label="Inventory" aria-live="polite">
+    <small>INVENTORY</small>
+    <div id="inventory-slots"><span class="inventory-empty">NO ITEMS</span></div>
+  </section>
   <section id="eviction-hud" aria-live="assertive">
-    <small>STERILE EVENT // REALITY FAILURE</small>
-    <strong>THE EVICTION</strong>
-    <div><span id="eviction-phase">DISTORTION WARNING</span><b id="eviction-time">03.0</b></div>
+    <small>HOTEL DISPOSAL SYSTEM // IMPACT WARNING</small>
+    <strong>THE PURGE</strong>
+    <div><span id="eviction-phase">METALLIC SCREECH</span><b id="eviction-time">03.0</b></div>
     <i><span id="eviction-progress"></span></i>
-    <p id="eviction-instruction">The lights are turning white. Watch the staff.</p>
+    <p id="eviction-instruction">The bulbs are bursting. Hide in a wardrobe or closet.</p>
   </section>
   <div id="eviction-flash"></div>
+  <section id="purge-quiet" aria-live="assertive">
+    <small>CABINET PANIC RESPONSE</small>
+    <strong>KEEP QUIET</strong>
+    <p>Hold the cursor inside the moving circle.</p>
+    <div id="purge-quiet-arena"><i id="purge-quiet-target"></i><b id="purge-quiet-cursor"></b></div>
+    <div id="purge-quiet-meter"><span></span></div>
+  </section>
+  <div id="purge-jumpscare" aria-hidden="true">
+    <div class="purge-drag-lines"></div>
+    <div class="purge-mouth"><i></i><b></b></div>
+    <div class="purge-splinters"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <strong>THE PURGE FOUND YOU</strong>
+  </div>
+  <section id="noise-hud" aria-live="assertive">
+    <small>ROOM 203 // SOUND DISCIPLINE</small>
+    <div><strong>THE QUIET ZONE</strong><b id="noise-value">00%</b></div>
+    <i><span id="noise-meter"></span></i>
+    <p id="noise-instruction">Crouch-walk. Hold E to open the marked drawer slowly.</p>
+    <em id="noise-hunt-time">SIGNAL STABLE</em>
+  </section>
+  <section id="floor-one-hud" aria-live="polite">
+    <div><small>FLOOR 1 // STAMINA</small><b id="floor-one-gold">GOLD 0</b></div>
+    <i><span id="floor-one-stamina"></span></i>
+    <p id="floor-one-status">SPRINT READY</p>
+  </section>
+  <section id="boss-hud" aria-live="assertive">
+    <small>MAJOR ENCOUNTER // NOISE SYSTEM OFFLINE</small>
+    <div><strong id="boss-name">THE CHEF</strong><b id="boss-phase">PHASE ONE</b></div>
+    <i><span id="boss-progress"></span></i>
+    <p id="boss-instruction">Watch the attack, use cover, and keep moving.</p>
+  </section>
+  <section id="clockmaker-hud" aria-live="assertive">
+    <small>TOWER SYNCHRONIZATION // NOISE SYSTEM OFFLINE</small>
+    <div class="clockmaker-hud__row">
+      <div id="clockmaker-dial" aria-hidden="true"><i id="clockmaker-hour-hand"></i><b id="clockmaker-minute-hand"></b><em></em></div>
+      <div><strong>THE CLOCKMAKER</strong><b id="clockmaker-phase">PHASE ONE</b><span id="clockmaker-time">12:00</span></div>
+    </div>
+    <i><span id="clockmaker-progress"></span></i>
+    <p id="clockmaker-instruction">Move on the rhythm. Interact when the hand reaches twelve.</p>
+  </section>
+  <section id="floor-two-hud" aria-live="polite">
+    <div><small>FLOOR 2 // THE SEVERED FAÇADE</small><b id="floor-two-room">INSIDE</b></div>
+    <i><span id="floor-two-battery"></span></i>
+    <p id="floor-two-status">FLASHLIGHT 100% · WEATHER CALM</p>
+  </section>
+  <div id="floor-two-weather" aria-hidden="true"><i></i><b></b></div>
+  <section id="noise-drawer" aria-live="polite">
+    <small>SLOW INTERACTION</small><strong>OPENING DRAWER</strong>
+    <i><span id="noise-drawer-progress"></span></i>
+    <p>Keep holding E. Releasing early makes the wood creak.</p>
+  </section>
+  <div id="noise-jumpscare" aria-hidden="true">
+    <div class="noise-static"></div>
+    <div class="noise-code">ERR_SIGNAL_LOSS // 0x4E4F495345 // HEARTBEAT_NULL</div>
+    <div class="noise-face"><i></i><b></b><em></em></div>
+    <div class="noise-flatline"><span></span></div>
+    <small>THE SIGNAL FOUND YOU</small>
+    <strong id="noise-death-reason">SIGNAL LOST</strong>
+  </div>
   <section id="maze-map-panel"><small>ROOT MAP</small><canvas id="maze-map" width="248" height="248"></canvas><div><i class="map-player"></i> YOU <i class="map-heart"></i> HEART</div></section>
-  <section id="story-select" aria-label="Choose a story">
-    <div class="story-select__topline"><span>NOCTURNE ARCHIVES</span><i></i><span>SELECT A STORY</span></div>
-    <div class="story-select__heading">
-      <small>WELCOME TO THE NIGHT SHIFT</small>
-      <h1>Choose your door.</h1>
-      <p>Three places are waiting. Progress is saved separately in each story.</p>
+  <section id="story-select" aria-label="Hotel lobby menu">
+    <div class="lobby-rail">
+      <div class="lobby-brand"><i></i><span><small>NOCTURNE HOTEL</small><strong>NIGHT LOBBY</strong></span></div>
+      <div class="lobby-status"><span>LOBBY 01</span><b>LIVE</b></div>
+      <div class="lobby-mode-list" role="listbox" aria-label="Select game">
+        <button class="lobby-mode active" data-lobby-game="hotel" role="option" aria-selected="true"><i>01</i><span><strong>HOTEL</strong><small>Hotel Nocturne</small></span><b>›</b></button>
+        <button class="lobby-mode" data-lobby-game="jailbreak" role="option" aria-selected="false"><i>02</i><span><strong>JAILBREAK</strong><small>Blackridge Penitentiary</small></span><b>›</b></button>
+        <button class="lobby-mode" data-lobby-game="cabin" role="option" aria-selected="false"><i>03</i><span><strong>CABIN</strong><small>The North Woods</small></span><b>›</b></button>
+      </div>
+      <div class="lobby-customize">
+        <div><small>RUN TYPE</small><b id="lobby-selected-game">HOTEL</b></div>
+        <div class="lobby-rules" role="listbox" aria-label="Customize run type">
+          <button class="active" data-lobby-rule="normal" role="option" aria-selected="true"><i>◆</i><span>NORMAL</span></button>
+          <button data-lobby-rule="endless" role="option" aria-selected="false"><i>∞</i><span>ENDLESS</span></button>
+          <button data-lobby-rule="sandbox" role="option" aria-selected="false"><i>⌘</i><span>SANDBOX</span></button>
+        </div>
+      </div>
+      <div class="lobby-preview" data-preview-game="hotel" data-preview-mode="normal" aria-live="polite">
+        <div class="lobby-preview__art"><i></i><b id="lobby-preview-floor">FLOOR 5</b></div>
+        <small>RUN PREVIEW</small><strong id="lobby-preview-title">THE ARRIVAL</strong>
+        <p id="lobby-preview-copy">Check in, recover the elevator key, and survive the hotel’s lower floors.</p>
+        <em id="lobby-mode-progress">CAMPAIGN READY</em>
+      </div>
+      <button id="lobby-start"><span>START RUN</span><i>→</i></button>
     </div>
-    <div class="story-grid">
-      <button class="story-card story-card--hotel" data-story="hotel">
-        <span class="story-card__number">01</span><span class="story-card__art"><i></i></span>
-        <span class="story-card__copy"><small>HOTEL NOCTURNE</small><strong>THE HOTEL</strong><em>Check in. Take the elevator straight to the fifth floor.</em><b data-story-progress="hotel">FLOOR 5 · ONLY FLOOR AVAILABLE</b></span>
-        <span class="story-card__play">ENTER <i>→</i></span>
-      </button>
-      <button class="story-card story-card--cabin" data-story="cabin">
-        <span class="story-card__number">02</span><span class="story-card__art"><i></i></span>
-        <span class="story-card__copy"><small>THE NORTH WOODS</small><strong>THE CABIN</strong><em>Repair the door. Follow the roots. Do not look back.</em><b data-story-progress="cabin">0 / 8 CHAPTERS</b></span>
-        <span class="story-card__play">ENTER <i>→</i></span>
-      </button>
-      <button class="story-card story-card--jailbreak" data-story="jailbreak">
-        <span class="story-card__number">03</span><span class="story-card__art"><i></i></span>
-        <span class="story-card__copy"><small>BLACKRIDGE PENITENTIARY</small><strong>JAILBREAK</strong><em>Watch the guard. Break security. Reach the road.</em><b data-story-progress="jailbreak">ACT 0 / 8</b></span>
-        <span class="story-card__play">ENTER <i>→</i></span>
-      </button>
-    </div>
-    <div class="story-select__footer"><span>CLICK A STORY TO BEGIN</span><span>YOUR PROGRESS SAVES AUTOMATICALLY</span></div>
+
+    <div class="lobby-corner"><small>HOTEL NOCTURNE</small><strong>THE LOUNGE</strong><span>H · HIDE INTERFACE</span></div>
+
+    <section class="lobby-modal" data-lobby-panel="badges" hidden aria-labelledby="badges-title">
+      <button class="lobby-modal__close" aria-label="Close badges">×</button><small>PERSONAL ARCHIVE</small><h2 id="badges-title">BADGES</h2>
+      <div class="badge-grid" id="lobby-badge-grid"></div>
+    </section>
+    <section class="lobby-modal lobby-modal--credits" data-lobby-panel="credits" hidden aria-labelledby="credits-title">
+      <button class="lobby-modal__close" aria-label="Close credits">×</button><small>HOTEL REGISTER</small><h2 id="credits-title">CREDITS</h2>
+      <div class="credits-scroll"><p><b>DESIGN & DEVELOPMENT</b><span>FionnbarZero</span></p><p><b>WORLD</b><span>Hotel Nocturne</span></p><p><b>ENGINE</b><span>Three.js · WebGL</span></p><p><b>SPECIAL THANKS</b><span>Every guest who checked in.</span></p></div>
+    </section>
+
+    <footer class="lobby-dock">
+      <div class="party-strip"><small>PARTY · 1 / 4</small><div class="party-member local"><i>Y</i><span><strong>YOU</strong><em>READY</em></span></div><div class="party-member empty"><i>+</i><span><strong>OPEN SLOT</strong><em>WAITING</em></span></div><button id="lobby-invite"><b>＋</b><span>INVITE FRIEND</span></button></div>
+      <nav class="lobby-nav" aria-label="Lobby navigation"><button data-lobby-panel-target="badges"><i>◆</i> BADGES</button><button data-lobby-panel-target="credits"><i>¶</i> CREDITS</button></nav>
+      <div class="lobby-help"><span id="lobby-notice">SELECT A MODE</span><small>H · CLEAN VIEW</small></div>
+    </footer>
   </section>
   <button id="hint">LISTEN TO THE CABIN</button>
   <button id="story-lobby">STORY LOBBY</button>
   <button id="reset-game">RESET GAME</button>
+  <button id="admin-toggle" aria-controls="admin-panel" aria-expanded="false">ADMIN · F2</button>
+  <section id="admin-panel" hidden aria-label="Admin panel">
+    <header><div><small>DEVELOPER TOOLS</small><strong>ADMIN PANEL</strong></div><button id="admin-close" aria-label="Close admin panel">×</button></header>
+    <label>TELEPORT<select id="admin-teleport">
+      <option value="story-lobby">Story Lobby</option><option value="cabin-main">Cabin · Main Room</option><option value="cabin-workshop">Cabin · Workshop</option><option value="hotel-courtyard">Hotel · Courtyard</option><option value="hotel-lobby">Hotel · Grand Lobby</option><option value="hotel-room304">Hotel · Room 304</option><option value="floor5-entry">Floor 5 · Entry</option><option value="floor5-library">Floor 5 · Library</option><option value="floor5-boss">Floor 5 · Elevator Boss</option><option value="room51">Room 51 · Executive Suites</option><option value="room60">Room 60 · Safe Haven</option><option value="floor1-entry">Floor 1 · Entry</option><option value="floor1-sound">Floor 1 · Sound Sector</option><option value="floor1-ballroom">Floor 1 · Ballroom</option><option value="floor1-chef">Floor 1 · Chef Opening</option><option value="floor1-chef-freezer">Chef · Freezer Lockdown</option><option value="floor1-chef-final">Chef · Final Service</option><option value="floor1-chef-elevator">Chef · Elevator Finale</option><option value="floor2-entry">Floor 2 · Rooms 101–104</option><option value="floor2-scale">Floor 2 · Room 105</option><option value="floor2-piano">Floor 2 · Room 112</option><option value="floor2-outside">Floor 2 · Ballroom</option><option value="floor2-watcher">Floor 2 · The Watcher</option><option value="floor2-garden">Floor 2 · Garden Maze</option><option value="floor2-window">Floor 2 · Window Creature</option><option value="floor2-guests">Floor 2 · False Guests</option><option value="floor2-fuse">Floor 2 · Room 120</option><option value="floor2-spotlights">Floor 2 · Room 128</option><option value="floor2-crane">Floor 2 · Room 135</option><option value="room140">Room 140 · Safe Vault</option><option value="collector-entry">Collector · Brass Key</option><option value="collector-medallion">Collector · Medallion</option><option value="collector-watch">Collector · Pocket Watch</option><option value="collector-room">Collector · Collection Room</option><option value="collector-release">Collector · Everything Released</option><option value="collector-escape">Collector · Escape Corridor</option><option value="clock-entry">Clockmaker · Follow Rhythm</option><option value="clock-face">Clockmaker · Clock Face</option><option value="clock-four">Clockmaker · Four Clocks</option><option value="clock-broken">Clockmaker · Broken Clock</option><option value="clock-climb">Clockmaker · Tower Climb</option><option value="clock-master">Clockmaker · Master Clock</option><option value="clock-escape">Clockmaker · Frozen Escape</option><option value="drowned-entry">Drowned Guest · First Pump</option><option value="drowned-furniture">Drowned Guest · Settling Furniture</option><option value="drowned-maintenance">Drowned Guest · Maintenance Rooms</option><option value="drowned-basin">Drowned Guest · Last Basin</option><option value="drowned-chase">Drowned Guest · Stands Up</option><option value="drowned-bulkhead">Drowned Guest · Bulkhead</option><option value="jailbreak-cell">Jailbreak · Cell</option>
+      <option value="pursuer-reveal">Pursuer · The Reveal</option><option value="pursuer-run">Pursuer · The Run</option><option value="pursuer-escape">Pursuer · Security Door</option>
+    </select></label><button id="admin-teleport-go">TELEPORT</button>
+    <label>MONSTER<select id="admin-monster">
+      <optgroup label="Hotel Nocturne"><option value="bash">Bash</option><option value="purge">The Purge</option><option value="noise">The Noise</option><option value="chef">The Chef</option><option value="collector">The Collector</option><option value="clockmaker">The Clockmaker</option><option value="drowned-guest">The Drowned Guest</option><option value="pursuer">The Pursuer</option><option value="stair-monster">Staircase Monster</option><option value="cable-mass">Cable Mass</option></optgroup>
+      <optgroup label="Floor 2 · Severed Façade"><option value="ballroom-guest">Ballroom Guest</option><option value="watcher">The Watcher</option><option value="water-creature">Water Creature</option><option value="gardener">The Gardener</option><option value="window-creature">Window Creature</option><option value="false-guest">False Guest</option></optgroup>
+      <optgroup label="Cabin"><option value="spider">Giant Spider</option><option value="root">Root Stalker</option></optgroup>
+      <optgroup label="Hotel Boss Variants"><option value="luggage-warden">The Luggage Warden</option><option value="empty-porter">The Empty Porter</option><option value="black-bellhop">The Black Bellhop</option><option value="reflection">The Reflection</option><option value="hotel-manager">The Hotel Manager</option><option value="night-auditor">The Night Auditor</option></optgroup>
+    </select></label>
+    <div class="admin-actions"><button id="admin-spawn">SPAWN</button><button id="admin-clear-monsters">CLEAR</button></div>
+    <button id="admin-invincible" aria-pressed="false">INFINITE HEALTH · OFF</button>
+    <label>ITEM<select id="admin-item"></select></label><button id="admin-give-item">GIVE ITEM</button>
+    <p>F2 opens this panel. Every creature has its own hunt pattern and stays grounded on the room geometry. The Purge, Cable Mass, and Reflection are the only spawned monsters that intentionally phase through walls.</p>
+  </section>
   <dialog id="puzzle"><button class="close">×</button><small id="puzzle-kicker"></small><h2 id="puzzle-title"></h2><p id="puzzle-copy"></p><div id="puzzle-body"></div><p id="feedback"></p></dialog>
   <dialog id="intro"><small id="intro-kicker">DUSK · THE NORTH WOODS</small><h2 id="intro-title">The trail disappeared<br><em>twenty minutes ago.</em></h2><p id="intro-copy">Your phone has no signal. Behind you, something keeps matching the rhythm of your footsteps.</p><button id="enter">KEEP WALKING</button></dialog>
   <div id="blackout"><span>Something is standing behind you.</span></div>
