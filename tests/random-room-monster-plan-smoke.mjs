@@ -10,7 +10,8 @@ if(closetCalls!==4)throw new Error(`Expected generated closets on three hotel fl
 if((source.match(/!hotelHideState&&/g)?.length||0)<2)throw new Error('Closets do not protect hidden players from monster contact');
 
 const buildPlanner=new Function('HOTEL_VISIT_SEED',`${definition};return randomRoomMonsterPlan`);
-const counts={bash:0,purge:0,'cable-mass':0,none:0};
+const roster=['bash','purge','cable-mass','empty-porter','black-bellhop','reflection','night-auditor'];
+const counts=Object.fromEntries([...roster.map(kind=>[kind,0]),['none',0]]);
 for(let visitSeed=1;visitSeed<=80;visitSeed++){
  const plan=buildPlanner(visitSeed);
  for(let room=0;room<50;room++){
@@ -25,7 +26,10 @@ for(let visitSeed=1;visitSeed<=80;visitSeed++){
  }
 }
 const total=Object.values(counts).reduce((sum,value)=>sum+value,0),encounters=total-counts.none,rate=encounters/total;
-if(Object.entries(counts).some(([kind,count])=>kind!=='none'&&count<150))throw new Error('Encounter selection is not distributing all three monsters: '+JSON.stringify(counts));
+if(Object.entries(counts).some(([kind,count])=>kind!=='none'&&count<50))throw new Error('Encounter selection is not distributing the full temporary monster roster: '+JSON.stringify(counts));
 if(rate<.19||rate>.25)throw new Error('Encounter rate drifted away from the configured 22% target: '+rate);
+if(!source.includes('lifetime:options.natural?')||!source.includes('finishTransientMonster(monster)'))throw new Error('Temporary room monsters do not disappear after their moment');
+if(!source.includes("activeHotelEncounter()||(adminMonsters.length?adminMonsters[0].name.toUpperCase():''"))throw new Error('Monster spawns are not mutually exclusive');
+if(!source.includes('||adminMonsters.length||hotelRoomPassage||'))throw new Error('Ransack can interrupt another monster or a room transition');
 
-console.log(JSON.stringify({counts,rate:Number(rate.toFixed(3)),delay:'2.2–5.0 seconds',cooldownRooms:2,generatedClosetFloors:closetCalls-1},null,2));
+console.log(JSON.stringify({counts,rate:Number(rate.toFixed(3)),delay:'2.2–5.0 seconds',cooldownRooms:2,lifetime:'8–13 seconds',overlap:'blocked',generatedClosetFloors:closetCalls-1},null,2));
