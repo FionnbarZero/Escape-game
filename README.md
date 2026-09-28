@@ -35,6 +35,8 @@ The current project has no multiplayer backend. **Invite Friend** shares or copi
 
 The bottom-screen inventory updates immediately when keys, tools, clues, supplies, and currency are collected or consumed. Quantities are combined into a single slot, selected items are highlighted, and the slot row scrolls when the player carries more items than fit on screen. Flashlights, matches, batteries, vitamins, first-aid kits, bandages, energy drinks, glow sticks, wind-up decoys, lockpicks, weapons, and quest items have functional effects or context-sensitive interactions.
 
+Ordinary discoveries, warnings, dialogue, and item descriptions now appear as compact bottom-screen notifications with readable text and automatically fade while movement remains available. They never require a close button. Full centered panels are reserved for interactions that genuinely require player input, such as puzzles, codes, shops, books, and explicit choices.
+
 The selected inventory item is also rendered in first person with visible hands and sleeves. Equipping, using, and collecting items now has a dedicated hand animation. Hotel drawer fronts physically slide open, while wardrobes and closets swing both doors and move the camera through a full enter/exit animation.
 
 All eight cabin areas are accessible and playable. Progress is saved in the browser.
