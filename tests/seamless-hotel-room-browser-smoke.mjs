@@ -12,10 +12,14 @@ const send=(method,params={})=>new Promise((resolve,reject)=>{const id=++nextId;
 const evaluate=async expression=>{const result=await send('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});if(result.exceptionDetails)throw new Error(JSON.stringify(result.exceptionDetails));return result.result.value};
 
 await send('Runtime.enable');
-for(let attempt=0;attempt<50;attempt++){
+await send('Page.enable');
+await send('Network.enable');
+await send('Network.setCacheDisabled',{cacheDisabled:true});
+await send('Page.reload',{ignoreCache:true});
+for(let attempt=0;attempt<600;attempt++){
  if(await evaluate(`typeof document.querySelector('#admin-teleport-go')?.onclick==='function'`))break;
  await new Promise(resolve=>setTimeout(resolve,100));
- if(attempt===49)throw new Error('Game module did not initialize');
+ if(attempt===599)throw new Error('Game module did not initialize');
 }
 
 const rendered=[];
@@ -26,5 +30,15 @@ for(const destination of ['floor5-entry','floor1-entry','floor2-entry']){
  await new Promise(resolve=>setTimeout(resolve,120));
 }
 
+const continuity=await evaluate(`(()=>{
+ cancelEviction();cancelNoise();cancelHotelNoiseArc();sessionStorage.setItem('infinite-hotel-purge-complete-v1','true');hotelRunFloor=1;hotelRunRoom=1;hotelRunItems=new Set(['key-102','purge-survived']);buildHotelRunRoom();
+ const sourceGroup=roomGroup,trigger=interactables.find(object=>object.userData.type==='hotel-run-exit');if(!trigger)throw new Error('Hotel run exit trigger missing');
+ handleHotelRun('hotel-run-exit',trigger);if(!hotelRoomPassage)throw new Error('Walking passage did not open');hotelRoomPassage.progress=1;camera.position.set(hotelRoomPassage.x,1.7,hotelRoomPassage.threshold-.08);camera.updateMatrixWorld(true);const before=camera.getWorldPosition(new THREE.Vector3()).toArray();updateHotelRoomPassage(.016);camera.updateMatrixWorld(true);const after=camera.getWorldPosition(new THREE.Vector3()).toArray();
+ const first={transition:document.body.dataset.hotelTransition,sourcePreserved:sourceGroup.parent===scene&&hotelConnectedChunks.includes(sourceGroup),newChunk:roomGroup!==sourceGroup,cameraInChunk:camera.parent===roomGroup,room:hotelRunRoom,worldDelta:new THREE.Vector3(...before).distanceTo(new THREE.Vector3(...after)),newOrigin:roomGroup.position.toArray()};
+ hotelRunItems.add('maintenance-wire');const secondSource=roomGroup,secondTrigger=interactables.find(object=>object.userData.type==='hotel-run-exit');handleHotelRun('hotel-run-exit',secondTrigger);hotelRoomPassage.progress=1;camera.position.set(hotelRoomPassage.x,1.7,hotelRoomPassage.threshold-.08);camera.updateMatrixWorld(true);const secondBefore=camera.getWorldPosition(new THREE.Vector3()).toArray();updateHotelRoomPassage(.016);camera.updateMatrixWorld(true);const secondAfter=camera.getWorldPosition(new THREE.Vector3()).toArray();
+ return{...first,chunkCount:hotelConnectedChunks.length+1,datasetChunks:Number(document.body.dataset.hotelWorldChunks),secondSourcePreserved:secondSource.parent===scene&&hotelConnectedChunks.includes(secondSource),secondRoom:hotelRunRoom,secondWorldDelta:new THREE.Vector3(...secondBefore).distanceTo(new THREE.Vector3(...secondAfter)),secondOrigin:roomGroup.position.toArray(),blackout:document.querySelector('#blackout').classList.contains('show'),prompt:document.querySelector('#prompt').textContent}
+})()`);
+if(continuity.transition!=='connected'||continuity.chunkCount!==3||continuity.datasetChunks!==3||!continuity.sourcePreserved||!continuity.secondSourcePreserved||!continuity.newChunk||!continuity.cameraInChunk||continuity.room!==2||continuity.secondRoom!==3||continuity.worldDelta>.001||continuity.secondWorldDelta>.001||Math.abs(continuity.newOrigin[2])<1||Math.abs(continuity.secondOrigin[2])<=Math.abs(continuity.newOrigin[2])||continuity.blackout)throw new Error(`Physical room continuity failed: ${JSON.stringify(continuity)}`);
+
 socket.close();
-console.log(JSON.stringify({rendered,blackoutUsed:false},null,2));
+console.log(JSON.stringify({rendered,continuity,blackoutUsed:false,cameraTeleport:false},null,2));

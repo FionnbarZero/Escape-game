@@ -5,6 +5,7 @@ import { readGameSource } from './source-bundle.mjs';
 const source=readGameSource();
 const html=fs.readFileSync(new URL('../index.html',import.meta.url),'utf8');
 const manifest=fs.readFileSync(new URL('../game/manifest.js',import.meta.url),'utf8');
+const specification=fs.readFileSync(new URL('../docs/molly-electrical-section.md',import.meta.url),'utf8');
 
 const required=[
  ['Molly source module',"'18-molly.js'"],
@@ -34,13 +35,21 @@ const required=[
  ['overhead cable trays',"open cable support tray"],
  ['active intercom floor zone',"intercom monitored floor marking"],
  ['broken intercom distinction',"INTERCOM OFFLINE"],
- ['crouch-safe intercom rule','!crouched&&intercom.cooldown<=0'],
+ ['crouch-safe intercom rule','!body.crouched&&intercom.cooldown<=0'],
  ['six labeled camera feeds','MOLLY_CAMERA_FEEDS'],
  ['camera player-position preservation','cameraView?.playerPosition'],
  ['camera ordinary-door access','function remoteOpenMollyCameraDoor()'],
  ['hacked-door remote refusal',"OVERRIDE REQUIRED · GET THE CODE"],
  ['restored camera access after override',"RESTORE CAMERA / DOOR ACCESS"],
- ['camera use does not suppress intercoms',"const crouched=molly.cameraView?.playerCrouched??"],
+ ['camera use does not suppress intercoms','const body=mollyPlayerBody()'],
+ ['live controller crouch state','function mollyCrouchHeld()'],
+ ['controller player feet preservation','playerFeetY,playerQuaternion'],
+ ['controller return height restoration','keys.Space=false;playerFeetY=feet'],
+ ['player-body capture test','function mollyCanCapturePlayer(body=mollyPlayerBody())'],
+ ['horizontal capture distance','captureHorizontalRadius:1.05'],
+ ['capture vertical overlap','verticalOverlap>.05'],
+ ['solid obstacle capture rejection','function mollyCaptureBlocked(body)'],
+ ['blocking-dialog pause remains explicit','function mollyModalPauseActive(){return dlg.open}'],
  ['drone inspection routes','MOLLY_DRONE_ROUTES'],
  ['physical controllable drone','function updateMollyDrone(dt,time)'],
  ['drone shortcut latch','function openMollyDroneLatch()'],
@@ -50,6 +59,10 @@ const required=[
  ['hammer shortcut collision','Molly breakable window blocker'],
  ['reinforced window distinction','reinforced observation window'],
  ['persistent player override','OVERRIDE HOLDS · USE THE CAMERA CONTROLLER'],
+ ['single active hack setting','maxActiveHacks:1'],
+ ['per-computer collected code record','collectedCodes:{}'],
+ ['active-hack code-machine selection','const number=mollyActiveHacks()[0]'],
+ ['compact override note','function updateMollyCodeRecord()'],
  ['permanent lever progress','function updateMollyProgressBoard()'],
  ['walk-through protected exit',"beginHotelRoomPassage(trigger,leaveMollySection)"],
  ['final control loss','molly.finalControlLost=true'],
@@ -65,5 +78,10 @@ if(!source.includes("The computer number on Molly\u2019s face identifies her des
 if(!source.includes("const open=molly.hacked.includes(computer)?false:molly.overridden.includes(computer)?molly.linkedDoorsOpened.includes(computer):true"))throw new Error('Linked shutters do not distinguish hacked, restored, and remotely opened states');
 if(source.includes('LEVER ${index+1} HAS NO POWER'))throw new Error('A physically reached lever is still arbitrarily gated by a computer override');
 if(source.includes('SHORTCUT LATCH RELEASED · AUTO-RECALL'))throw new Error('The drone still teleports through a preset route and opens the latch automatically');
+if(!html.includes('id="molly-code-record"')||!html.includes('id="molly-code-list"'))throw new Error('Molly collected codes lack a compact dedicated record');
+if(!specification.includes('The prototype permits one active Molly-hacked shutter at a time.'))throw new Error('Molly implementation assumptions are not documented');
+const lowerController=source.match(/function endMollyCameraFeed[\s\S]*?function updateMollyDrone/)?.[0]||'';
+if(/keys\.(KeyC|ControlLeft|ControlRight)=false/.test(lowerController))throw new Error('Lowering a Molly controller still clears held crouch input');
+if(!source.includes('mollyModalPauseActive())return'))throw new Error('Molly modal-pause behavior is no longer explicit in her update gate');
 
-console.log(JSON.stringify({monster:'Molly',appearance:'Teller-inspired tailored service silhouette',hairFlip:'articulated hand-up + grip + flick + cable settle',tools:['Nocturne maintenance hammer','camera / door controller','inspection drone controller'],cameraController:['six live feeds','ordinary remote access doors','hacked shutter refusal','post-override remote opening'],drone:['physical movement','service control','location beep','instant lower','recovery dock'],layout:'reception + connected loops + three lever rooms + final switch room',face:'00 or selected computer',terminals:6,wireBundles:18,cameraFeeds:6,droneRoutes:4,intercom:'marked and crouch-safe even while viewing controllers',shortcuts:['drone latch','hammer window'],leverProgress:'permanent',shutters:'open until hacked',exit:'walk-through protected corridor',noiseOverlap:false},null,2));
+console.log(JSON.stringify({monster:'Molly',appearance:'Teller-inspired tailored service silhouette',hairFlip:'articulated hand-up + grip + flick + cable settle',tools:['Nocturne maintenance hammer','camera / door controller','inspection drone controller'],cameraController:['six live feeds','ordinary remote access doors','hacked shutter refusal','post-override remote opening'],drone:['physical movement','service control','location beep','instant lower','recovery dock'],layout:'reception + connected loops + three lever rooms + final switch room',face:'00 or selected computer',terminals:6,wireBundles:18,cameraFeeds:6,droneRoutes:4,intercom:'marked and crouch-safe even while viewing controllers',shortcuts:['drone latch','hammer window'],leverProgress:'permanent',hacks:'one concurrent lock with per-computer recorded code',shutters:'open until hacked',exit:'walk-through protected corridor',noiseOverlap:false},null,2));

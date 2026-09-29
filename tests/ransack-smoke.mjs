@@ -31,13 +31,15 @@ let passed;
 for(let attempt=0;attempt<150;attempt++){await wait(100);passed=await evaluate(`(()=>({phase:document.body.dataset.ransackPhase,passed:document.querySelector('#ransack-hud').classList.contains('passed'),copy:document.querySelector('#ransack-instruction').textContent,still:document.body.dataset.ransackStill,motion:document.body.dataset.ransackMotion,time:document.querySelector('#ransack-time').textContent}))()`);if(passed.phase==='passed')break}
 if(passed.phase!=='passed'||!passed.passed||!passed.copy.includes('challenge'))throw new Error('Stopping did not pass Ransack: '+JSON.stringify(passed));
 await wait(2600);
+await evaluate(`setStability(65)`);
+const composureBeforeFailure=await evaluate(`stability`);
 await evaluate(`(()=>{document.dispatchEvent(new KeyboardEvent('keydown',{code:'KeyW',bubbles:true}));document.querySelector('#admin-ransack').onclick()})()`);
 let failed;
 for(let attempt=0;attempt<300;attempt++){await wait(100);failed=await evaluate(`(()=>({phase:document.body.dataset.ransackPhase,failed:document.querySelector('#ransack-hud').classList.contains('failed'),sign:document.querySelector('#ransack-sign').textContent,count:document.querySelector('#ransack-time').textContent,copy:document.querySelector('#ransack-instruction').textContent,stability:document.querySelector('#stability-text').textContent,still:document.body.dataset.ransackStill,motion:document.body.dataset.ransackMotion}))()`);if(failed.phase==='collect')break}
 await evaluate(`document.dispatchEvent(new KeyboardEvent('keyup',{code:'KeyW',bubbles:true}))`);
-if(failed.phase!=='collect'||!failed.failed||failed.sign!=='FAILED'||failed.count!=='0 / 3'||!failed.copy.includes('three red marks')||failed.stability!=='COMPOSURE 100%')throw new Error('Ransack non-lethal collection consequence failed: '+JSON.stringify(failed));
+if(failed.phase!=='collect'||!failed.failed||failed.sign!=='FAILED'||failed.count!=='0 / 3'||!failed.copy.includes('three red marks')||failed.stability!==`COMPOSURE ${Math.ceil(composureBeforeFailure)}%`)throw new Error('Ransack non-lethal collection consequence failed: '+JSON.stringify({composureBeforeFailure,failed}));
 const unexpectedExceptions=exceptions.filter(error=>!error.includes('user gesture is required to request Pointer Lock'));
 if(unexpectedExceptions.length)throw new Error('Browser exceptions: '+unexpectedExceptions.join(' | '));
 
 socket.close();
-console.log(JSON.stringify({warning,passed,failed,browserExceptions:0},null,2));
+console.log(JSON.stringify({warning,passed,composureBeforeFailure,failed,browserExceptions:0},null,2));

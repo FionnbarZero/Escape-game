@@ -39,13 +39,13 @@ await new Promise(resolve=>setTimeout(resolve,500));
 const entry=await evaluate(`(()=>({title:document.querySelector('#title').textContent,prompt:document.querySelector('#prompt').textContent,wired:typeof document.querySelector('#admin-teleport-go').onclick,panelHidden:document.querySelector('#admin-panel').hidden,run:JSON.parse(sessionStorage.getItem('infinite-hotel-floor-two'))}))()`);
 if(!entry.run)throw new Error('Generated Floor 2 entry did not initialize: '+JSON.stringify(entry));
 const interiorRoutes=[entry.run.routes.arrival,entry.run.routes.scaleToPiano,entry.run.routes.pianoToBallroom,entry.run.routes.returnInside],interior=interiorRoutes.flat(),exteriorRoutes=[entry.run.routes.watcherExterior,entry.run.routes.fuseExterior,entry.run.routes.finalExterior],exterior=exteriorRoutes.flat();
-if(!entry.title||!entry.run.seed||entry.run.version!==9)throw new Error('Generated Floor 2 entry did not initialize');
+if(!entry.title||!entry.run.seed||entry.run.version!==11)throw new Error('Generated Floor 2 entry did not initialize');
 const generatedDoorCount=interior.length+exterior.length;
 if(generatedDoorCount!==39)throw new Error(`Floor 2 should contain 39 generated rooms, received ${generatedDoorCount}`);
-if(exterior.length!==18||new Set(exterior).size<8)throw new Error('Floor 2 exterior is not long or varied enough: '+JSON.stringify(exterior));
+const exteriorKinds=exterior.map(room=>typeof room==='string'?room:room.kind);
+if(exterior.length!==18||new Set(exteriorKinds).size!==15)throw new Error('Floor 2 exterior does not contain all authored room families: '+JSON.stringify(exterior));
 if(entry.run.routes.watcherExterior.length!==2||entry.run.routes.fuseExterior.length!==7||entry.run.routes.finalExterior.length!==9)throw new Error('Floor 2 exterior route lengths changed unexpectedly');
-const courtyardOption=await evaluate(`document.querySelector('#admin-teleport option[value="floor2-courtyard"]')!==null`);
-if(courtyardOption)throw new Error('Removed Flooded Courtyard is still exposed in the admin teleport menu');
+if(!exteriorKinds.includes('flooded-courtyard'))throw new Error('Flooded Courtyard was not integrated into the generated outdoor route');
 for(const route of interiorRoutes){
  if(!route.some(room=>room.shape==='l-turn'))throw new Error('Interior segment is missing its guaranteed L-turn');
  if(!route.some(room=>['left-turn','right-turn','switchback','zigzag','winding'].includes(room.layout)))throw new Error('Interior segment is missing a real multi-segment route');

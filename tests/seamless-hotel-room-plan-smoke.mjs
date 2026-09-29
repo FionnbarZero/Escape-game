@@ -15,7 +15,10 @@ const requirements=[
  ['numbered hotel connected exits',"type:'hotel-run-exit',part:'hotel-run-exit'"],
  ['Library connected exit',"part:'library-exit'"],
  ['Pool connected exit',"part:'pool-exit'"],
- ['stream completion marker',"dataset.hotelTransition='streamed'"]
+ ['connected completion marker',"dataset.hotelTransition='connected'"],
+ ['persistent connected chunks','hotelConnectedChunks.push(currentChunk)'],
+ ['world-position preservation','worldPosition=camera.getWorldPosition'],
+ ['camera joins next chunk','nextGroup.add(camera)']
 ];
 for(const [name,needle] of requirements)if(!source.includes(needle))throw new Error(`Missing ${name}`);
 
@@ -23,4 +26,4 @@ if(!source.includes('handleFloorFive(data.part,hit.object)')||!source.includes('
 if(!source.includes('beginHotelRoomPassage(trigger,floorOneAdvance)')||!source.includes('beginHotelRoomPassage(trigger,floorTwoAdvance)'))throw new Error('A numbered floor still advances immediately when E is pressed');
 if(!readme.includes('walk through a physical connector'))throw new Error('README does not document seamless room streaming');
 
-console.log(JSON.stringify({hotelTransitions:'screen-free',activation:'open then walk',floors:[5,1,2],connector:'physical vestibule',cameraTeleportOnInteract:false},null,2));
+console.log(JSON.stringify({hotelTransitions:'persistent connected world chunks',activation:'open then walk',floors:[5,1,2],connector:'physical vestibule',cameraTeleportOnInteract:false,cameraTeleportOnThreshold:false},null,2));

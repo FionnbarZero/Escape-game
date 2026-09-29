@@ -1,0 +1,253 @@
+/* Character portraits for lethal encounters. The base overlay remains shared, but
+   every creature owns its face, props, palette, and impact motion. */
+#monster-jumpscare{
+  --scare-motion:unknown-lunge;
+  --portrait:#171313;
+}
+#monster-jumpscare.active .monster-jumpscare__face{
+  animation-name:var(--scare-motion)!important;
+  animation-duration:.86s;
+  animation-timing-function:cubic-bezier(.05,.78,.08,1);
+  animation-fill-mode:forwards;
+}
+.monster-jumpscare__signature{position:absolute;z-index:5;inset:0;pointer-events:none}
+.monster-jumpscare__signature>span{display:none;position:absolute;left:50%;top:50%;translate:-50% -50%;color:var(--scare);font:900 clamp(28px,8vw,104px)/1 monospace;letter-spacing:.04em;text-align:center;text-shadow:0 0 18px currentColor}
+.monster-jumpscare__signature>i{display:none;position:absolute;background:var(--scare);box-shadow:0 0 15px var(--scare)}
+.monster-jumpscare__impact{position:absolute;z-index:2;inset:0;pointer-events:none}
+.monster-jumpscare__impact>i{display:none;position:absolute;background:var(--scare);box-shadow:0 0 22px var(--scare)}
+
+/* Bash: the broad red skull and shoulder plates hit the camera in one lane. */
+#monster-jumpscare[data-monster="bash"]{--scare:#ff3b17;--skin:#241311;--scare-motion:bash-ram}
+#monster-jumpscare[data-monster="bash"] .monster-jumpscare__face{width:min(78vw,760px);height:min(58vh,520px);border-radius:12%;clip-path:polygon(12% 8%,88% 8%,100% 45%,78% 100%,22% 100%,0 45%);background:linear-gradient(90deg,#25292a 0 12%,#491612 13% 87%,#25292a 88%)}
+#monster-jumpscare[data-monster="bash"] .monster-jumpscare__face>i{top:31%;height:7%;border-radius:8%;background:#ffcf79}
+#monster-jumpscare[data-monster="bash"] .monster-jumpscare__face>b{left:27%;right:27%;bottom:12%;height:25%;border-radius:5%;background:repeating-linear-gradient(90deg,#090707 0 10%,#7e1d13 11% 15%)}
+#monster-jumpscare[data-monster="bash"] .monster-jumpscare__face>em{top:-5%;left:8%;width:84%;height:28%;clip-path:polygon(0 0,46% 30%,50% 100%,54% 30%,100% 0,86% 72%,14% 72%);background:#4d5558}
+#monster-jumpscare[data-monster="bash"] .monster-jumpscare__impact>i:nth-child(1),#monster-jumpscare[data-monster="bash"] .monster-jumpscare__impact>i:nth-child(2){display:block;top:22%;width:26vw;height:38vh;background:#303638}
+#monster-jumpscare[data-monster="bash"] .monster-jumpscare__impact>i:nth-child(1){left:-8%;rotate:18deg}#monster-jumpscare[data-monster="bash"] .monster-jumpscare__impact>i:nth-child(2){right:-8%;rotate:-18deg}
+
+/* Chef: recognizable skin, toque, and a cleaver crossing the portrait. */
+#monster-jumpscare[data-monster="chef"]{--scare:#f4eee2;--skin:#936d59;--scare-motion:chef-cleave}
+#monster-jumpscare[data-monster="chef"] .monster-jumpscare__face{width:min(55vw,540px);border-radius:45% 45% 34% 34%;background:radial-gradient(circle at 36% 35%,#b98a72 0 7%,transparent 8%),#936d59}
+#monster-jumpscare[data-monster="chef"] .monster-jumpscare__face>em{left:6%;top:-29%;width:88%;height:42%;clip-path:polygon(8% 100%,3% 48%,18% 17%,37% 28%,50% 0,65% 27%,83% 14%,97% 48%,91% 100%);background:#eee7dc}
+#monster-jumpscare[data-monster="chef"] .monster-jumpscare__face>b{border-radius:8% 8% 42% 42%;transform:skewX(-8deg)}
+#monster-jumpscare[data-monster="chef"] .monster-jumpscare__impact>i:first-child{display:block;left:54%;top:-20%;width:8%;height:145%;rotate:34deg;background:linear-gradient(90deg,#50595d,#f4f7f3 62%,#272c2e)}
+
+/* Collector: a hooded void closes while keys and straps swing inward. */
+#monster-jumpscare[data-monster="collector"]{--scare:#d09b45;--skin:#080707;--scare-motion:collector-grab}
+#monster-jumpscare[data-monster="collector"] .monster-jumpscare__face{border-radius:50% 50% 36% 36%;background:radial-gradient(ellipse,#030303 0 45%,#271f1d 46% 72%,#4b3023 73%)}
+#monster-jumpscare[data-monster="collector"] .monster-jumpscare__face>i{top:37%;height:3%;background:#d09b45}
+#monster-jumpscare[data-monster="collector"] .monster-jumpscare__face>b{display:none}
+#monster-jumpscare[data-monster="collector"] .monster-jumpscare__signature>span{display:block;top:70%;font-size:clamp(14px,3vw,34px)}
+#monster-jumpscare[data-monster="collector"] .monster-jumpscare__signature>i{display:block;top:4%;width:4%;height:92%;background:#6b4630}
+#monster-jumpscare[data-monster="collector"] .monster-jumpscare__signature>i:nth-of-type(1){left:14%;rotate:-12deg}#monster-jumpscare[data-monster="collector"] .monster-jumpscare__signature>i:nth-of-type(2){right:14%;rotate:12deg}
+
+/* Clockmaker: the face itself is a spinning brass clock. */
+#monster-jumpscare[data-monster="clockmaker"]{--scare:#e0a83d;--skin:#5f4825;--scare-motion:clockmaker-wind}
+#monster-jumpscare[data-monster="clockmaker"] .monster-jumpscare__face{border-radius:50%;background:repeating-conic-gradient(#b78b3c 0 3deg,#352717 4deg 8deg);box-shadow:inset 0 0 0 28px #17110b,0 0 0 12px #b78b3c,0 0 90px #e0a83d}
+#monster-jumpscare[data-monster="clockmaker"] .monster-jumpscare__face>i,#monster-jumpscare[data-monster="clockmaker"] .monster-jumpscare__face>b,#monster-jumpscare[data-monster="clockmaker"] .monster-jumpscare__face>em{display:none}
+#monster-jumpscare[data-monster="clockmaker"] .monster-jumpscare__signature>span{display:block;color:#ead7a1}
+#monster-jumpscare[data-monster="clockmaker"] .monster-jumpscare__signature>i{display:block;left:49%;top:16%;width:2%;height:35%;transform-origin:50% 100%;background:#120d08}
+#monster-jumpscare[data-monster="clockmaker"] .monster-jumpscare__signature>i:nth-of-type(2){height:27%;rotate:105deg}
+
+/* Drowned Guest: a pale hotel mask surges through rising water. */
+#monster-jumpscare[data-monster="drowned"]{--scare:#49b6c8;--skin:#d8d5ca;--scare-motion:drowned-surge}
+#monster-jumpscare[data-monster="drowned"] .monster-jumpscare__face{border-radius:47% 47% 40% 40%;background:linear-gradient(#d8d5ca 0 58%,#214d56 59% 100%)}
+#monster-jumpscare[data-monster="drowned"] .monster-jumpscare__face>i{background:#031416;box-shadow:inset 0 0 12px #49b6c8}
+#monster-jumpscare[data-monster="drowned"] .monster-jumpscare__face>b{height:7%;bottom:25%;border-radius:50%;box-shadow:none;background:#5f4845}
+#monster-jumpscare[data-monster="drowned"] .monster-jumpscare__face>b:before,#monster-jumpscare[data-monster="drowned"] .monster-jumpscare__face>b:after{display:none}
+#monster-jumpscare[data-monster="drowned"] .monster-jumpscare__signature>span{display:block;top:79%;font-size:clamp(18px,4vw,44px);color:#a9f7ff}
+#monster-jumpscare[data-monster="drowned"] .monster-jumpscare__impact{background:linear-gradient(transparent 45%,rgba(39,132,148,.72));animation:drowned-water-rise .8s ease-in forwards}
+
+/* Water Creature: a wide fish-like head breaches sideways. */
+#monster-jumpscare[data-monster="water"]{--scare:#53deea;--skin:#0d3035;--scare-motion:water-breach}
+#monster-jumpscare[data-monster="water"] .monster-jumpscare__face{width:min(82vw,820px);height:min(43vh,390px);border-radius:52% 48% 35% 35%;background:repeating-linear-gradient(165deg,#17515a 0 9%,#0d3035 10% 20%)}
+#monster-jumpscare[data-monster="water"] .monster-jumpscare__face>i{top:17%;width:12%;height:22%;background:#e8f5c8}
+#monster-jumpscare[data-monster="water"] .monster-jumpscare__face>b{left:9%;right:9%;bottom:7%;height:44%;border-radius:50%}
+#monster-jumpscare[data-monster="water"] .monster-jumpscare__face>em{left:-11%;top:19%;width:122%;height:36%;background:#123b42;clip-path:polygon(0 50%,12% 0,17% 38%,83% 38%,88% 0,100% 50%,88% 100%,83% 62%,17% 62%,12% 100%)}
+
+/* Pursuer: the long blank mask arrives from where the player was heading. */
+#monster-jumpscare[data-monster="pursuer"]{--scare:#eee8d7;--skin:#d8d4c8;--scare-motion:pursuer-intercept}
+#monster-jumpscare[data-monster="pursuer"] .monster-jumpscare__face{width:min(39vw,380px);height:min(82vh,760px);border-radius:48% 48% 38% 38%;background:#d8d4c8}
+#monster-jumpscare[data-monster="pursuer"] .monster-jumpscare__face>i{top:31%;width:12%;height:14%;background:#020203;box-shadow:none}
+#monster-jumpscare[data-monster="pursuer"] .monster-jumpscare__face>b{left:31%;right:31%;bottom:22%;height:9%;border:0;border-radius:50%;background:#020203;box-shadow:none}
+#monster-jumpscare[data-monster="pursuer"] .monster-jumpscare__face>b:before,#monster-jumpscare[data-monster="pursuer"] .monster-jumpscare__face>b:after{display:none}
+#monster-jumpscare[data-monster="pursuer"] .monster-jumpscare__face>em{display:none}
+
+/* Molly: her terminal face ejects, retracts, then slams into the player. */
+#monster-jumpscare[data-monster="molly"]{--scare:#67ece1;--skin:#17272a;--scare-motion:molly-monitor-kill;background:radial-gradient(circle,#173a3d,#020809 62%,#000)}
+#monster-jumpscare[data-monster="molly"] .monster-jumpscare__face{width:min(68vw,680px);height:min(48vh,430px);border:clamp(10px,2vw,22px) solid #17272a;border-radius:7%;background:repeating-linear-gradient(0deg,#061416 0 5px,#0c2a2c 6px 9px);box-shadow:0 0 0 8px #05090a,0 0 95px 28px #67ece1}
+#monster-jumpscare[data-monster="molly"] .monster-jumpscare__face>i,#monster-jumpscare[data-monster="molly"] .monster-jumpscare__face>b{display:none}
+#monster-jumpscare[data-monster="molly"] .monster-jumpscare__face>em{left:8%;top:-65%;width:84%;height:70%;background:repeating-linear-gradient(90deg,transparent 0 8%,#17272a 9% 11%,transparent 12% 20%);clip-path:none}
+#monster-jumpscare[data-monster="molly"] .monster-jumpscare__signature>span{display:block;color:#b8fff9;font-size:clamp(92px,22vw,250px);letter-spacing:-.12em;text-shadow:0 0 10px #67ece1,0 0 35px #67ece1}
+#monster-jumpscare[data-monster="molly"] .monster-jumpscare__signature:before{content:'COMPUTER FACE // CAPTURE';position:absolute;left:4%;top:6%;color:#67ece1;font:700 clamp(8px,1.2vw,13px)/1 monospace;letter-spacing:.2em}
+#monster-jumpscare[data-monster="molly"] .monster-jumpscare__signature:after{content:'';position:absolute;left:2%;right:2%;height:3px;top:12%;background:#b8fff9;box-shadow:0 0 20px #67ece1;animation:molly-scanline .24s linear infinite}
+#monster-jumpscare[data-monster="molly"] .monster-jumpscare__impact>i{display:block;width:3px;height:55%;top:-5%;background:#67ece1;transform-origin:top}
+#monster-jumpscare[data-monster="molly"] .monster-jumpscare__impact>i:nth-child(1){left:18%;rotate:-22deg}#monster-jumpscare[data-monster="molly"] .monster-jumpscare__impact>i:nth-child(2){left:36%;rotate:12deg}#monster-jumpscare[data-monster="molly"] .monster-jumpscare__impact>i:nth-child(3){right:36%;rotate:-9deg}#monster-jumpscare[data-monster="molly"] .monster-jumpscare__impact>i:nth-child(4){right:18%;rotate:24deg}
+
+/* Staircase Monster: a tall split face attacks in the same broad zigzag it walks. */
+#monster-jumpscare[data-monster="stair"]{--scare:#d02018;--skin:#1c0809;--scare-motion:stair-zigzag}
+#monster-jumpscare[data-monster="stair"] .monster-jumpscare__face{width:min(48vw,470px);height:min(84vh,790px);clip-path:polygon(18% 0,82% 0,100% 30%,72% 48%,100% 67%,75% 100%,25% 100%,0 68%,28% 49%,0 30%);background:linear-gradient(105deg,#31090b 0 48%,#080303 49% 53%,#210708 54%)}
+#monster-jumpscare[data-monster="stair"] .monster-jumpscare__face>b{left:5%;right:5%;height:36%;clip-path:polygon(0 0,15% 24%,28% 0,41% 24%,54% 0,67% 24%,80% 0,100% 26%,91% 100%,9% 100%)}
+
+/* Cable Mass: concentric coils and live wires replace a humanoid face. */
+#monster-jumpscare[data-monster="cable"]{--scare:#4fc4e0;--skin:#12191d;--scare-motion:cable-whip}
+#monster-jumpscare[data-monster="cable"] .monster-jumpscare__face{border-radius:50%;background:repeating-radial-gradient(circle,#0a0d0f 0 7%,#536068 8% 11%,#12191d 12% 18%);box-shadow:0 0 0 15px #292f31,0 0 100px #4fc4e0}
+#monster-jumpscare[data-monster="cable"] .monster-jumpscare__face>i,#monster-jumpscare[data-monster="cable"] .monster-jumpscare__face>b,#monster-jumpscare[data-monster="cable"] .monster-jumpscare__face>em{display:none}
+#monster-jumpscare[data-monster="cable"] .monster-jumpscare__signature>span{display:block;font-size:clamp(34px,9vw,100px)}
+#monster-jumpscare[data-monster="cable"] .monster-jumpscare__impact>i{display:block;left:50%;top:-20%;width:8px;height:145%;transform-origin:center;animation:cable-live-shake .08s steps(2) infinite}
+#monster-jumpscare[data-monster="cable"] .monster-jumpscare__impact>i:nth-child(1){rotate:36deg}#monster-jumpscare[data-monster="cable"] .monster-jumpscare__impact>i:nth-child(2){rotate:72deg}#monster-jumpscare[data-monster="cable"] .monster-jumpscare__impact>i:nth-child(3){rotate:108deg}#monster-jumpscare[data-monster="cable"] .monster-jumpscare__impact>i:nth-child(4){rotate:144deg}
+
+/* Giant Spider: clustered eyes and paired fangs pounce down from above. */
+#monster-jumpscare[data-monster="spider"]{--scare:#e32318;--skin:#090605;--scare-motion:spider-pounce}
+#monster-jumpscare[data-monster="spider"] .monster-jumpscare__face{width:min(76vw,730px);height:min(56vh,510px);border-radius:52% 52% 30% 30%;background:radial-gradient(ellipse at 50% 70%,#30100c,#090605 68%)}
+#monster-jumpscare[data-monster="spider"] .monster-jumpscare__face>i{top:24%;width:9%;height:13%;background:#e32318;box-shadow:-80px -32px 0 -8px #e32318,80px -32px 0 -8px #e32318,-45px 58px 0 -10px #e32318,45px 58px 0 -10px #e32318}
+#monster-jumpscare[data-monster="spider"] .monster-jumpscare__face>b{left:31%;right:31%;height:39%;clip-path:polygon(0 0,44% 30%,50% 100%,56% 30%,100% 0,78% 100%,22% 100%);background:#efe5cd}
+#monster-jumpscare[data-monster="spider"] .monster-jumpscare__face>b:before,#monster-jumpscare[data-monster="spider"] .monster-jumpscare__face>b:after{display:none}
+
+/* Root Stalker: bark, roots, and its single red eye erupt from below. */
+#monster-jumpscare[data-monster="root"]{--scare:#c52c21;--skin:#2a1b12;--scare-motion:root-erupt}
+#monster-jumpscare[data-monster="root"] .monster-jumpscare__face{clip-path:polygon(23% 0,38% 15%,50% 0,62% 14%,78% 0,90% 35%,78% 100%,22% 100%,10% 35%);background:repeating-linear-gradient(82deg,#1b110c 0 8%,#4b2c1c 9% 13%)}
+#monster-jumpscare[data-monster="root"] .monster-jumpscare__face>i:first-child{left:34%;top:30%;width:32%;height:28%;background:#a81712;box-shadow:0 0 34px #e32318}
+#monster-jumpscare[data-monster="root"] .monster-jumpscare__face>i:nth-child(2),#monster-jumpscare[data-monster="root"] .monster-jumpscare__face>b{display:none}
+#monster-jumpscare[data-monster="root"] .monster-jumpscare__face>em{left:-5%;top:-25%;width:110%;height:40%;background:#3b2115;clip-path:polygon(0 100%,8% 0,18% 78%,30% 5%,42% 76%,51% 0,61% 78%,76% 8%,84% 80%,100% 0,94% 100%)}
+
+/* Gardener: a stitched moss mask sweeps across with its shovel. */
+#monster-jumpscare[data-monster="gardener"]{--scare:#80b85c;--skin:#263b29;--scare-motion:gardener-reap}
+#monster-jumpscare[data-monster="gardener"] .monster-jumpscare__face{border-radius:42% 42% 18% 18%;background:repeating-linear-gradient(32deg,#1d2c20 0 9%,#38543a 10% 15%)}
+#monster-jumpscare[data-monster="gardener"] .monster-jumpscare__face>i{height:4%;border-radius:0;background:#080b08;box-shadow:none}
+#monster-jumpscare[data-monster="gardener"] .monster-jumpscare__signature>span{display:block;top:65%;color:#c7ddb4;font-size:clamp(36px,9vw,108px)}
+#monster-jumpscare[data-monster="gardener"] .monster-jumpscare__impact>i:first-child{display:block;left:53%;top:-25%;width:12px;height:150%;rotate:-28deg;background:#61696b}
+#monster-jumpscare[data-monster="gardener"] .monster-jumpscare__impact>i:nth-child(2){display:block;left:23%;top:52%;width:62%;height:18%;rotate:-28deg;background:#697275;clip-path:polygon(0 40%,83% 0,100% 50%,83% 100%)}
+
+/* Watcher: an impossibly long statue face only moves after the frame blacks out. */
+#monster-jumpscare[data-monster="watcher"]{--scare:#ded8c8;--skin:#09090a;--scare-motion:watcher-unseen}
+#monster-jumpscare[data-monster="watcher"] .monster-jumpscare__face{width:min(36vw,350px);height:min(88vh,820px);border-radius:48% 48% 15% 15%;background:linear-gradient(90deg,#050506,#302e2b 48%,#080809)}
+#monster-jumpscare[data-monster="watcher"] .monster-jumpscare__face>i{top:25%;width:8%;height:3%;background:#eee8d7;box-shadow:0 0 13px #b5110b}
+#monster-jumpscare[data-monster="watcher"] .monster-jumpscare__face>b{left:38%;right:38%;height:34%;border-radius:50%;background:#000}
+#monster-jumpscare[data-monster="watcher"] .monster-jumpscare__signature>span{display:block;top:11%;font-size:clamp(11px,2vw,22px);letter-spacing:.35em;color:#eee8d7}
+
+/* Ballroom Guest: porcelain mask and a turning waltz silhouette. */
+#monster-jumpscare[data-monster="ballroom-guest"]{--scare:#e9d7c6;--skin:#c9c0af;--scare-motion:guest-waltz}
+#monster-jumpscare[data-monster="ballroom-guest"] .monster-jumpscare__face{width:min(52vw,500px);height:min(69vh,640px);border-radius:50% 50% 40% 40%;background:linear-gradient(115deg,#e6dccb,#a49a8c)}
+#monster-jumpscare[data-monster="ballroom-guest"] .monster-jumpscare__face>i{height:4%;background:#2c1920;box-shadow:none}
+#monster-jumpscare[data-monster="ballroom-guest"] .monster-jumpscare__face>b{height:6%;bottom:24%;border-radius:50%;background:#5b3039;box-shadow:none}
+#monster-jumpscare[data-monster="ballroom-guest"] .monster-jumpscare__face>b:before,#monster-jumpscare[data-monster="ballroom-guest"] .monster-jumpscare__face>b:after{display:none}
+#monster-jumpscare[data-monster="ballroom-guest"] .monster-jumpscare__signature>span{display:block;top:72%;font-family:Georgia,serif;font-size:clamp(26px,6vw,70px);color:#6c3843}
+
+/* False Guest: the pleasant mask splits and reveals the extra limbs behind it. */
+#monster-jumpscare[data-monster="false-guest"]{--scare:#e14d5e;--skin:#d7c6af;--scare-motion:impostor-unmask}
+#monster-jumpscare[data-monster="false-guest"] .monster-jumpscare__face{border-radius:48%;background:linear-gradient(90deg,#d7c6af 0 47%,#170709 48% 53%,#9b7b69 54%)}
+#monster-jumpscare[data-monster="false-guest"] .monster-jumpscare__face>i:first-child{background:#2b1517}#monster-jumpscare[data-monster="false-guest"] .monster-jumpscare__face>i:nth-child(2){height:22%;background:#f1e6d2;box-shadow:0 0 22px #e14d5e}
+#monster-jumpscare[data-monster="false-guest"] .monster-jumpscare__signature>span{display:block;top:9%;font-size:clamp(13px,2.5vw,30px)}
+#monster-jumpscare[data-monster="false-guest"] .monster-jumpscare__impact>i{display:block;top:25%;width:5px;height:70%;background:#371115;transform-origin:center}
+#monster-jumpscare[data-monster="false-guest"] .monster-jumpscare__impact>i:nth-child(1){left:18%;rotate:58deg}#monster-jumpscare[data-monster="false-guest"] .monster-jumpscare__impact>i:nth-child(2){right:18%;rotate:-58deg}#monster-jumpscare[data-monster="false-guest"] .monster-jumpscare__impact>i:nth-child(3){left:23%;rotate:112deg}#monster-jumpscare[data-monster="false-guest"] .monster-jumpscare__impact>i:nth-child(4){right:23%;rotate:-112deg}
+
+/* Window Creature: its glowing face punches through a six-pane frame. */
+#monster-jumpscare[data-monster="window"]{--scare:#d72b23;--skin:#08090b;--scare-motion:window-break}
+#monster-jumpscare[data-monster="window"] .monster-jumpscare__face{border-radius:2%;border:22px solid #27333a;background:radial-gradient(circle,#561017,#07090b 62%);box-shadow:inset 0 0 0 9px #0b0d0e,0 0 90px #d72b23}
+#monster-jumpscare[data-monster="window"] .monster-jumpscare__face:before,#monster-jumpscare[data-monster="window"] .monster-jumpscare__face:after{content:'';position:absolute;z-index:4;background:#27333a}.monster-jumpscare__face:before{left:48%;top:0;width:4%;height:100%}#monster-jumpscare[data-monster="window"] .monster-jumpscare__face:after{left:0;top:48%;width:100%;height:4%}
+#monster-jumpscare[data-monster="window"] .monster-jumpscare__signature>span{display:block;top:11%;font-size:clamp(12px,2vw,22px)}
+
+/* Reflection: two opposing half-faces cross through each other. */
+#monster-jumpscare[data-monster="reflection"]{--scare:#b7d5e4;--skin:#8895a0;--scare-motion:reflection-cross}
+#monster-jumpscare[data-monster="reflection"] .monster-jumpscare__face{border-radius:48%;background:linear-gradient(90deg,#d9e4e8 0 49%,#11171c 50% 51%,#596873 52%);box-shadow:-32px 0 0 rgba(183,213,228,.25),32px 0 0 rgba(183,213,228,.18),0 0 90px #b7d5e4}
+#monster-jumpscare[data-monster="reflection"] .monster-jumpscare__face>i:first-child{transform:scaleX(-1) rotate(14deg)}#monster-jumpscare[data-monster="reflection"] .monster-jumpscare__face>i:nth-child(2){transform:rotate(-14deg)}
+#monster-jumpscare[data-monster="reflection"] .monster-jumpscare__signature>span{display:block;top:76%;font-size:clamp(18px,4vw,48px);color:#e8f7ff}
+
+/* Luggage Warden: the face is squeezed between closing trunks. */
+#monster-jumpscare[data-monster="warden"]{--scare:#b58a58;--skin:#2c1b16;--scare-motion:warden-crush}
+#monster-jumpscare[data-monster="warden"] .monster-jumpscare__face{width:min(58vw,570px);border-radius:18%;background:#442b23;box-shadow:inset 0 0 0 18px #6c4733,0 0 80px #b58a58}
+#monster-jumpscare[data-monster="warden"] .monster-jumpscare__signature>span{display:block;top:11%;font-size:clamp(20px,5vw,56px)}
+#monster-jumpscare[data-monster="warden"] .monster-jumpscare__impact>i:nth-child(1),#monster-jumpscare[data-monster="warden"] .monster-jumpscare__impact>i:nth-child(2){display:block;top:3%;width:38%;height:94%;background:repeating-linear-gradient(90deg,#503426 0 18%,#251712 19% 22%);border:8px solid #2c1b16}
+#monster-jumpscare[data-monster="warden"] .monster-jumpscare__impact>i:nth-child(1){left:-5%;animation:warden-case-left .7s forwards}#monster-jumpscare[data-monster="warden"] .monster-jumpscare__impact>i:nth-child(2){right:-5%;animation:warden-case-right .7s forwards}
+
+/* Empty Porter: the face vanishes, then blinks back almost touching the camera. */
+#monster-jumpscare[data-monster="porter"]{--scare:#d5d1c8;--skin:#08090a;--scare-motion:porter-blink}
+#monster-jumpscare[data-monster="porter"] .monster-jumpscare__face{width:min(50vw,490px);border-radius:46%;background:#08090a;box-shadow:0 0 0 10px #202329,0 0 70px #d5d1c8}
+#monster-jumpscare[data-monster="porter"] .monster-jumpscare__face>i,#monster-jumpscare[data-monster="porter"] .monster-jumpscare__face>b{display:none}
+#monster-jumpscare[data-monster="porter"] .monster-jumpscare__signature>span{display:block;color:#d5d1c8;font-size:clamp(17px,4vw,46px)}
+#monster-jumpscare[data-monster="porter"] .monster-jumpscare__impact>i:first-child{display:block;right:8%;bottom:-8%;width:18vw;height:18vw;border-radius:50%;background:#d5d1c8}
+
+/* Black Bellhop: cap, dark uniform, and a bell pulse before the charge. */
+#monster-jumpscare[data-monster="bellhop"]{--scare:#d5ad5d;--skin:#3a1119;--scare-motion:bellhop-ring}
+#monster-jumpscare[data-monster="bellhop"] .monster-jumpscare__face{border-radius:45% 45% 32% 32%;background:linear-gradient(#390f17,#15070b)}
+#monster-jumpscare[data-monster="bellhop"] .monster-jumpscare__face>em{left:13%;top:-14%;width:74%;height:28%;clip-path:polygon(10% 0,90% 0,100% 72%,65% 72%,62% 100%,38% 100%,35% 72%,0 72%);background:#390f17}
+#monster-jumpscare[data-monster="bellhop"] .monster-jumpscare__signature>span{display:block;top:11%;font-size:clamp(13px,3vw,32px)}
+#monster-jumpscare[data-monster="bellhop"] .monster-jumpscare__impact>i:first-child{display:block;right:8%;top:29%;width:15vw;height:15vw;max-width:170px;max-height:170px;border-radius:50% 50% 42% 42%;background:radial-gradient(circle at 50% 75%,#291b0b 0 8%,#d5ad5d 9% 55%,#5b3008 56%);animation:bell-pulse .15s steps(2) infinite}
+
+/* Hotel Manager: a severe face and brass badge block the route ahead. */
+#monster-jumpscare[data-monster="manager"]{--scare:#c59a55;--skin:#8b6d5d;--scare-motion:manager-block}
+#monster-jumpscare[data-monster="manager"] .monster-jumpscare__face{width:min(57vw,550px);border-radius:37% 37% 24% 24%;background:linear-gradient(90deg,#3f2529 0 19%,#8b6d5d 20% 80%,#3f2529 81%)}
+#monster-jumpscare[data-monster="manager"] .monster-jumpscare__face>i{height:4%;border-radius:0;background:#1d1111;box-shadow:none}
+#monster-jumpscare[data-monster="manager"] .monster-jumpscare__signature>span{display:block;top:14%;font-size:clamp(18px,4vw,44px);color:#f1d493;border:3px solid currentColor;padding:.12em .25em}
+
+/* Night Auditor: a ledger-white face is crossed by a searching scan line. */
+#monster-jumpscare[data-monster="auditor"]{--scare:#d8c4a2;--skin:#17191d;--scare-motion:auditor-scan}
+#monster-jumpscare[data-monster="auditor"] .monster-jumpscare__face{border-radius:8%;background:repeating-linear-gradient(0deg,#191b1f 0 8%,#24262a 9% 11%)}
+#monster-jumpscare[data-monster="auditor"] .monster-jumpscare__face>i{width:28%;height:2%;border-radius:0;background:#d8c4a2;box-shadow:0 0 12px #d8c4a2}
+#monster-jumpscare[data-monster="auditor"] .monster-jumpscare__face>b{display:none}
+#monster-jumpscare[data-monster="auditor"] .monster-jumpscare__signature>span{display:block;top:68%;font-size:clamp(34px,9vw,100px);color:#d8c4a2}
+#monster-jumpscare[data-monster="auditor"] .monster-jumpscare__signature:after{content:'';position:absolute;left:4%;right:4%;top:0;height:4px;background:#fff0d2;box-shadow:0 0 24px #fff;animation:auditor-line .38s linear infinite}
+
+/* Cellblock guard: a searchlight pins the player before a diagonal baton strike. */
+#monster-jumpscare[data-monster="cellblock-guard"]{--scare:#f2d175;--skin:#5a4a3c;--scare-motion:guard-baton}
+#monster-jumpscare[data-monster="cellblock-guard"] .monster-jumpscare__face{border-radius:35%;background:linear-gradient(#252b31 0 22%,#5a4a3c 23% 72%,#171a1d 73%)}
+#monster-jumpscare[data-monster="cellblock-guard"] .monster-jumpscare__signature>span{display:block;top:12%;font-size:clamp(18px,4vw,48px);color:#f2d175}
+#monster-jumpscare[data-monster="cellblock-guard"] .monster-jumpscare__impact{background:conic-gradient(from -18deg at 50% 18%,transparent 0 35%,rgba(255,232,155,.55) 40% 60%,transparent 65%)}
+#monster-jumpscare[data-monster="cellblock-guard"] .monster-jumpscare__impact>i:first-child{display:block;left:53%;top:-18%;width:18px;height:145%;rotate:42deg;background:#171a1d}
+
+/* Pursuit Guards: twin faces close like a roadblock instead of copying one guard. */
+#monster-jumpscare[data-monster="pursuit-guards"]{--scare:#df2b21;--skin:#4a3b32;--scare-motion:guards-roadblock}
+#monster-jumpscare[data-monster="pursuit-guards"] .monster-jumpscare__face{width:min(43vw,420px);border-radius:30%;background:linear-gradient(#1c2227 0 25%,#4a3b32 26% 75%,#0b0d0e 76%);box-shadow:-42vw 8vh 0 -5vw #222930,42vw -5vh 0 -5vw #222930,0 0 90px #df2b21}
+#monster-jumpscare[data-monster="pursuit-guards"] .monster-jumpscare__signature>span{display:block;top:12%;color:#ff3b30;font-size:clamp(21px,5vw,58px)}
+#monster-jumpscare[data-monster="pursuit-guards"] .monster-jumpscare__impact:before,#monster-jumpscare[data-monster="pursuit-guards"] .monster-jumpscare__impact:after{content:'';position:absolute;top:20%;width:26vw;height:26vw;border-radius:50%;background:#dbe7ff;box-shadow:0 0 90px #fff;animation:guard-light-flash .12s steps(2) infinite}
+#monster-jumpscare[data-monster="pursuit-guards"] .monster-jumpscare__impact:before{left:2%}#monster-jumpscare[data-monster="pursuit-guards"] .monster-jumpscare__impact:after{right:2%}
+
+/* Vent Crawler: a low, stretched face and four claws strike through a grille. */
+#monster-jumpscare[data-monster="crawler"]{--scare:#80b85c;--skin:#152114;--scare-motion:crawler-duct-slam}
+#monster-jumpscare[data-monster="crawler"] .monster-jumpscare__face{width:min(86vw,850px);height:min(36vh,340px);border-radius:42% 42% 20% 20%;background:repeating-linear-gradient(90deg,#10170f 0 12%,#283d28 13% 18%)}
+#monster-jumpscare[data-monster="crawler"] .monster-jumpscare__face>i{top:21%;width:7%;height:19%;background:#d7efb8}
+#monster-jumpscare[data-monster="crawler"] .monster-jumpscare__face>b{bottom:5%;height:45%}
+#monster-jumpscare[data-monster="crawler"] .monster-jumpscare__impact{background:repeating-linear-gradient(0deg,transparent 0 13%,rgba(94,105,108,.72) 14% 17%)}
+#monster-jumpscare[data-monster="crawler"] .monster-jumpscare__impact>i{display:block;top:8%;width:6px;height:84%;background:#d2d7ce;rotate:18deg}
+#monster-jumpscare[data-monster="crawler"] .monster-jumpscare__impact>i:nth-child(1){left:13%}#monster-jumpscare[data-monster="crawler"] .monster-jumpscare__impact>i:nth-child(2){left:27%}#monster-jumpscare[data-monster="crawler"] .monster-jumpscare__impact>i:nth-child(3){right:27%;rotate:-18deg}#monster-jumpscare[data-monster="crawler"] .monster-jumpscare__impact>i:nth-child(4){right:13%;rotate:-18deg}
+
+/* Each profile has a different approach path, matching how that creature attacks. */
+@keyframes unknown-lunge{0%{transform:translate(-50%,-50%) scale(.04)}100%{transform:translate(-50%,-50%) scale(1.8)}}
+@keyframes bash-ram{0%{transform:translate(-160%,-50%) scale(.5)}42%{transform:translate(-45%,-50%) scale(.95)}100%{transform:translate(-50%,-50%) scale(2.25)}}
+@keyframes chef-cleave{0%{transform:translate(-50%,-20%) scale(.18) rotate(8deg)}58%{transform:translate(-50%,-50%) scale(.95) rotate(-4deg)}100%{transform:translate(-52%,-50%) scale(1.75) rotate(2deg)}}
+@keyframes collector-grab{0%{transform:translate(-50%,-50%) scale(.25);filter:brightness(.1)}45%{transform:translate(-50%,-50%) scale(.82);filter:brightness(.45)}100%{transform:translate(-50%,-50%) scale(1.85);filter:brightness(1.2)}}
+@keyframes clockmaker-wind{0%{transform:translate(-50%,-50%) scale(.06) rotate(-240deg)}70%{transform:translate(-50%,-50%) scale(1.05) rotate(18deg)}100%{transform:translate(-50%,-50%) scale(1.75) rotate(0)}}
+@keyframes drowned-surge{0%{transform:translate(-50%,75%) scale(.5)}55%{transform:translate(-50%,-52%) scale(.92)}100%{transform:translate(-50%,-46%) scale(1.8)}}
+@keyframes water-breach{0%{transform:translate(-145%,-40%) scale(.35) rotate(-12deg)}58%{transform:translate(-42%,-52%) scale(1.05) rotate(4deg)}100%{transform:translate(-50%,-50%) scale(1.65)}}
+@keyframes pursuer-intercept{0%{transform:translate(75%,-50%) scale(.35)}48%{transform:translate(-46%,-50%) scale(.85)}100%{transform:translate(-50%,-50%) scale(1.55)}}
+@keyframes molly-monitor-kill{0%{transform:translate(-50%,-50%) scale(.08);filter:brightness(.2)}34%{transform:translate(-50%,-50%) scale(1.05);filter:brightness(1.5)}57%{transform:translate(-50%,-50%) scale(.58);filter:brightness(.45)}100%{transform:translate(-50%,-50%) scale(2.35);filter:brightness(2)}}
+@keyframes stair-zigzag{0%{transform:translate(-125%,-50%) scale(.3) rotate(-9deg)}32%{transform:translate(5%,-50%) scale(.62) rotate(8deg)}62%{transform:translate(-85%,-50%) scale(1.05) rotate(-5deg)}100%{transform:translate(-50%,-50%) scale(1.85)}}
+@keyframes cable-whip{0%{transform:translate(-110%,-90%) scale(.18) rotate(-35deg)}40%{transform:translate(-5%,-30%) scale(.8) rotate(28deg)}72%{transform:translate(-78%,-60%) scale(1.18) rotate(-12deg)}100%{transform:translate(-50%,-50%) scale(1.9)}}
+@keyframes spider-pounce{0%{transform:translate(-50%,-145%) scale(.42)}50%{transform:translate(-50%,-38%) scale(1)}65%{transform:translate(-50%,-55%) scale(.88)}100%{transform:translate(-50%,-50%) scale(1.9)}}
+@keyframes root-erupt{0%{transform:translate(-50%,90%) scale(.32)}50%{transform:translate(-50%,-45%) scale(.9)}100%{transform:translate(-50%,-50%) scale(1.85)}}
+@keyframes gardener-reap{0%{transform:translate(-110%,-45%) scale(.45) rotate(-14deg)}55%{transform:translate(-48%,-50%) scale(.95) rotate(3deg)}100%{transform:translate(-50%,-50%) scale(1.72) rotate(-2deg)}}
+@keyframes watcher-unseen{0%,27%{transform:translate(-50%,-50%) scale(.22);opacity:1}28%,48%{opacity:0}49%{transform:translate(-50%,-50%) scale(1.05);opacity:1}68%{opacity:0}69%,100%{transform:translate(-50%,-50%) scale(1.75);opacity:1}}
+@keyframes guest-waltz{0%{transform:translate(-50%,-50%) scale(.18) rotate(-28deg)}60%{transform:translate(-50%,-50%) scale(.95) rotate(18deg)}100%{transform:translate(-50%,-50%) scale(1.65) rotate(0)}}
+@keyframes impostor-unmask{0%{transform:translate(-50%,-50%) scale(.3) rotateY(70deg)}48%{transform:translate(-50%,-50%) scale(.88) rotateY(0)}100%{transform:translate(-50%,-50%) scale(1.9) rotateY(-18deg)}}
+@keyframes window-break{0%{transform:translate(-50%,-50%) scale(.3)}52%{transform:translate(-50%,-50%) scale(.92)}64%{transform:translate(-50%,-50%) scale(.8) rotate(2deg)}100%{transform:translate(-50%,-50%) scale(1.85) rotate(-3deg)}}
+@keyframes reflection-cross{0%{transform:translate(-120%,-50%) scale(.42) scaleX(-1)}50%{transform:translate(15%,-50%) scale(.95) scaleX(-1)}100%{transform:translate(-50%,-50%) scale(1.75) scaleX(-1)}}
+@keyframes warden-crush{0%{transform:translate(-50%,-50%) scale(.16,.7)}70%{transform:translate(-50%,-50%) scale(.95,1)}100%{transform:translate(-50%,-50%) scale(1.8,1.4)}}
+@keyframes porter-blink{0%,28%{transform:translate(-50%,-50%) scale(.16);opacity:1}29%,58%{opacity:0}59%{transform:translate(-50%,-50%) scale(1.15);opacity:1}100%{transform:translate(-50%,-50%) scale(1.9)}}
+@keyframes bellhop-ring{0%,24%{transform:translate(-50%,-50%) scale(.25)}35%{transform:translate(-50%,-50%) scale(.25) rotate(5deg)}46%{transform:translate(-50%,-50%) scale(.25) rotate(-5deg)}100%{transform:translate(-50%,-50%) scale(1.9)}}
+@keyframes manager-block{0%{transform:translate(-50%,-135%) scale(.55)}55%{transform:translate(-50%,-50%) scale(.9)}100%{transform:translate(-50%,-50%) scale(1.72)}}
+@keyframes auditor-scan{0%{transform:translate(-85%,-50%) scale(.38)}45%{transform:translate(-20%,-50%) scale(.72)}70%{transform:translate(-50%,-50%) scale(1.02)}100%{transform:translate(-50%,-50%) scale(1.8)}}
+@keyframes guard-baton{0%{transform:translate(-50%,-50%) scale(.35)}58%{transform:translate(-50%,-50%) scale(.95)}100%{transform:translate(-56%,-46%) scale(1.72) rotate(-8deg)}}
+@keyframes guards-roadblock{0%{transform:translate(-50%,60%) scale(.3)}52%{transform:translate(-50%,-50%) scale(.9)}100%{transform:translate(-50%,-50%) scale(1.78)}}
+@keyframes crawler-duct-slam{0%{transform:translate(-50%,105%) scale(.45,.2)}55%{transform:translate(-50%,-42%) scale(1,.8)}100%{transform:translate(-50%,-50%) scale(1.8,1.45)}}
+
+@keyframes drowned-water-rise{from{transform:translateY(55%)}to{transform:translateY(0)}}
+@keyframes molly-scanline{from{top:12%}to{top:88%}}
+@keyframes cable-live-shake{50%{translate:8px -4px;filter:brightness(2)}}
+@keyframes warden-case-left{to{transform:translateX(22%)}}@keyframes warden-case-right{to{transform:translateX(-22%)}}
+@keyframes bell-pulse{50%{transform:scale(1.15);filter:brightness(1.8)}}
+@keyframes auditor-line{from{top:2%}to{top:96%}}
+@keyframes guard-light-flash{50%{opacity:.15}}
+
+body.reduced-motion #monster-jumpscare.active .monster-jumpscare__face{animation-name:none!important;transform:translate(-50%,-50%) scale(1.25)}
+body.reduced-motion .monster-jumpscare__impact,body.reduced-flashing .monster-jumpscare__impact,body.reduced-flashing .monster-jumpscare__impact>i,body.reduced-flashing .monster-jumpscare__impact:before,body.reduced-flashing .monster-jumpscare__impact:after,body.reduced-flashing .monster-jumpscare__signature:after{animation:none!important}

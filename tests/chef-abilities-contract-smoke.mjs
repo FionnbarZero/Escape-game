@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+const source=fs.readFileSync(new URL('../game/18-chef-abilities.js',import.meta.url),'utf8');
+const manifest=fs.readFileSync(new URL('../game/manifest.js',import.meta.url),'utf8');
+const floorOne=fs.readFileSync(new URL('../game/16-floor-one.js',import.meta.url),'utf8');
+const loader=fs.readFileSync(new URL('../three-game.js',import.meta.url),'utf8');
+const required=['phaseTwoAt:70','phaseThreeAt:35','doubleWaveDelay','landingLockTime','fanAngles','panWindup','stationCooldown','chefExitUnlocked','tryFloorOneChefCoolingCounter','updateFloorOneChefShockwaves'];
+const missing=required.filter(token=>!source.includes(token));
+if(missing.length)throw new Error('Chef abilities contract missing: '+missing.join(', '));
+if(!manifest.includes("'18-chef-abilities.js'"))throw new Error('Chef abilities runtime is not in the game manifest');
+if(!floorOne.includes('bossFight=floorOne.phase===10')||!floorOne.includes('bossActive=floorOne.phase===10'))throw new Error('The Noise must remain disabled for the complete Chef area');
+if(!loader.includes('for (const filename of GAME_SCRIPTS) await queueGameScript(filename)'))throw new Error('Shared classic scripts must load in manifest order');
+if(source.includes('startMolly')||source.includes('startCollector')||source.includes('startClockmaker'))throw new Error('Chef milestone must not implement another monster encounter');
+console.log(JSON.stringify({contract:'chef abilities',required:required.length,manifest:true,orderedLoader:true,noiseDisabledForChefArea:true,otherMonsterRuntimeChanges:false},null,2));

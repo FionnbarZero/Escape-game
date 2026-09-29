@@ -12,6 +12,10 @@ const send=(method,params={})=>new Promise((resolve,reject)=>{const id=++nextId;
 const evaluate=async expression=>{const result=await send('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});if(result.exceptionDetails)throw new Error(JSON.stringify(result.exceptionDetails));return result.result.value};
 
 await send('Runtime.enable');
+await send('Page.enable');
+await send('Network.enable');
+await send('Network.setCacheDisabled',{cacheDisabled:true});
+await send('Page.reload',{ignoreCache:true});
 for(let attempt=0;attempt<50;attempt++){
  if(await evaluate(`typeof document.querySelector('#admin-teleport-go')?.onclick==='function'`))break;
  await new Promise(resolve=>setTimeout(resolve,100));

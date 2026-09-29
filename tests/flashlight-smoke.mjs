@@ -14,8 +14,10 @@ const wait=milliseconds=>new Promise(resolve=>setTimeout(resolve,milliseconds));
 
 await send('Runtime.enable');
 await send('Page.enable');
+await send('Page.bringToFront');
 await evaluate(`(()=>{localStorage.setItem('infinite-hotel-arrival-items',JSON.stringify(['flashlight']));localStorage.setItem('escape-usable-inventory',JSON.stringify({spentGold:0,matchesBought:0,matchesUsed:0,vitamins:0,medkits:0,batteries:1,lockpicks:0,flashlightOn:true,flashlightCharge:20}))})()`);
 await send('Page.reload',{ignoreCache:true});
+await send('Page.bringToFront');
 exceptions.length=0;
 for(let attempt=0;attempt<150;attempt++){
  if(await evaluate(`typeof document.querySelector('#admin-teleport-go')?.onclick==='function'`))break;
@@ -24,7 +26,7 @@ for(let attempt=0;attempt<150;attempt++){
  if(attempt===149)throw new Error('Game module did not finish initializing');
 }
 
-await evaluate(`(()=>{document.dispatchEvent(new KeyboardEvent('keydown',{code:'F2',bubbles:true}));const select=document.querySelector('#admin-teleport');select.value='floor2-entry';document.querySelector('#admin-teleport-go').onclick()})()`);
+await evaluate(`(()=>{if(document.hidden)Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new KeyboardEvent('keydown',{code:'F2',bubbles:true}));const select=document.querySelector('#admin-teleport');select.value='floor2-entry';document.querySelector('#admin-teleport-go').onclick()})()`);
 await wait(1800);
 const drained=await evaluate(`(()=>{const inventory=JSON.parse(localStorage.getItem('escape-usable-inventory'));return{charge:inventory.flashlightCharge,on:inventory.flashlightOn,label:document.querySelector('[data-item="flashlight"] span')?.textContent,battery:document.querySelector('[data-item="flashlight-battery"]')!==null,storyHidden:document.querySelector('#story-select').hidden,dialogOpen:document.querySelector('#puzzle').open,title:document.querySelector('#title').textContent}})()`);
 if(!(drained.charge<20&&drained.charge>17)||!drained.on||!drained.label?.includes('%')||!drained.battery)throw new Error('Flashlight did not drain or display charge correctly: '+JSON.stringify({drained,exceptions}));

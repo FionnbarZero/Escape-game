@@ -1,0 +1,59 @@
+{
+  "phase": "after",
+  "capturedAt": "2026-09-29T20:16:38.642Z",
+  "viewport": [
+    1280,
+    720
+  ],
+  "devicePixelRatio": 1,
+  "pixelRatio": 1,
+  "drawingBuffer": [
+    1280,
+    720
+  ],
+  "quality": "high",
+  "hotelSeed": 1214564155,
+  "renderScale": 1,
+  "flashlightOn": false,
+  "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "vendor": "Google Inc. (Google)",
+  "toneMapping": 4,
+  "exposure": 0.94,
+  "shadows": true,
+  "shadowType": 2,
+  "fogDensity": 0.0095,
+  "scene": {
+    "meshes": 908,
+    "lights": 41,
+    "materials": 840,
+    "geometries": 443
+  },
+  "rendererInfo": {
+    "calls": 754,
+    "triangles": 57004,
+    "lines": 0,
+    "points": 0,
+    "memory": {
+      "geometries": 440,
+      "textures": 57
+    }
+  },
+  "frameMs": {
+    "mean": 7137.225000000001,
+    "median": 7249.700000000012,
+    "p95": 9483,
+    "samples": 12
+  },
+  "molly": {
+    "wires": 18,
+    "computers": 6,
+    "intercoms": 4,
+    "levers": 3
+  },
+  "url": "http://127.0.0.1:8765/?quality=high&graphicsEvidence=after&cache=1790712580731",
+  "exceptions": [
+    "NotAllowedError: A user gesture is required to request Pointer Lock.",
+    "NotAllowedError: A user gesture is required to request Pointer Lock."
+  ],
+  "failedRequests": []
+}

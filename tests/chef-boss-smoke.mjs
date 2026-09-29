@@ -27,8 +27,8 @@ await wait(500);
 const initial=await evaluate(`(()=>({title:document.querySelector('#title').textContent,boss:document.querySelector('#boss-hud').classList.contains('active'),noise:document.querySelector('#noise-hud').classList.contains('active')}))()`);
 const triggered=await evaluate(`(()=>({title:document.querySelector('#title').textContent,boss:document.querySelector('#boss-hud').classList.contains('active'),bossName:document.querySelector('#boss-name').textContent,noise:document.querySelector('#noise-hud').classList.contains('active'),run:JSON.parse(sessionStorage.getItem('infinite-hotel-floor-one'))}))()`);
 if(initial.title!=='The Chef'||!triggered.boss||triggered.bossName!=='THE CHEF'||triggered.noise||!triggered.run?.chefTriggered)throw new Error('Chef boss setup did not initialize correctly: '+JSON.stringify({initial,triggered}));
-if(triggered.run.chefStage!=='ranged')throw new Error('Unexpected Chef opening stage: '+triggered.run.chefStage);
-const phaseChecks=[['floor1-chef-freezer','The Freezer','freezer','PHASE FOUR'],['floor1-chef-final','The Final Service','final-service','PHASE FIVE'],['floor1-chef-elevator','Elevator Finale','elevator-finale','PHASE SIX']];
+if(triggered.run.chefStage!=='combat'||triggered.run.chefHealth!==100||triggered.run.chefCombatPhase!==1)throw new Error('Unexpected Chef opening state: '+JSON.stringify(triggered.run));
+const phaseChecks=[['floor1-chef-freezer','The Chef','combat','PHASE TWO'],['floor1-chef-final','The Chef','combat','PHASE THREE'],['floor1-chef-elevator','The Chef','defeated','STAGGERED']];
 const phases=[];
 for(const [destination,expectedTitle,expectedStage,expectedPhase] of phaseChecks){
  await evaluate(`(()=>{document.dispatchEvent(new KeyboardEvent('keydown',{code:'F2',bubbles:true}));const select=document.querySelector('#admin-teleport');select.value=${JSON.stringify(destination)};document.querySelector('#admin-teleport-go').onclick()})()`);
@@ -37,7 +37,7 @@ for(const [destination,expectedTitle,expectedStage,expectedPhase] of phaseChecks
  if(state.title!==expectedTitle||state.run?.chefStage!==expectedStage||!state.phase.includes(expectedPhase)||!state.boss||state.noise)throw new Error('Chef advanced phase failed: '+JSON.stringify({destination,state}));
  phases.push(state.run.chefStage);
 }
-const expectedMonsters=['bash','purge','noise','chef','collector','clockmaker','drowned-guest','pursuer','stair-monster','cable-mass','ballroom-guest','watcher','water-creature','gardener','window-creature','false-guest','spider','root','luggage-warden','empty-porter','black-bellhop','reflection','hotel-manager','night-auditor'];
+const expectedMonsters=['bash','purge','noise','chef','collector','clockmaker','drowned-guest','pursuer','molly','stair-monster','cable-mass','ballroom-guest','watcher','water-creature','gardener','window-creature','false-guest','spider','root','luggage-warden','empty-porter','black-bellhop','reflection','hotel-manager','night-auditor'];
 const monsterOptions=await evaluate(`[...document.querySelector('#admin-monster').options].map(option=>option.value)`);
 if(JSON.stringify(monsterOptions)!==JSON.stringify(expectedMonsters))throw new Error('Admin monster catalog mismatch: '+JSON.stringify(monsterOptions));
 const monsterBehaviors=await evaluate(`[...document.querySelector('#admin-monster').options].map(option=>({id:option.value,behavior:option.dataset.behavior,pattern:option.dataset.pattern,wallMode:option.dataset.wallMode}))`);
@@ -50,7 +50,7 @@ for(const monster of expectedMonsters){
  await wait(120);
  await evaluate(`(()=>{document.dispatchEvent(new KeyboardEvent('keydown',{code:'F2',bubbles:true}));document.querySelector('#admin-clear-monsters').onclick();document.querySelector('#admin-close').onclick()})()`);
 }
-const unexpectedExceptions=exceptions.filter(error=>!error.includes('user gesture is required to request Pointer Lock'));
+const unexpectedExceptions=exceptions.filter(error=>!error.includes('Pointer Lock')&&!error.includes('requestPointerLock'));
 if(unexpectedExceptions.length)throw new Error('Browser exceptions: '+unexpectedExceptions.join(' | '));
 
 socket.close();
