@@ -8,4 +8,4 @@ if(roomNames.length!==12||new Set(roomNames.map(room=>room.name)).size!==12||new
 for(const id of curioIds)if(!source.includes(`'${id}':{label:`))throw new Error(`Keepsake is missing from inventory: ${id}`);
 for(const contract of ["interactive([-6.5,1.3,-6.4],[1.8,2.4,1.8],8,'hotel-run-curio'","journalDiscoverCurio(def.special.id)","OPTIONAL KEEPSAKE","buildHotelRunRoomIdentity(def);buildHotelRunSpecialItem(def)"])if(!source.includes(contract))throw new Error(`Missing room-keepsake contract: ${contract}`);
 if(source.includes('function buildSubFloor')||source.includes("hotelSideScene='sub-floor'"))throw new Error('Sub-floors were made playable before their design was requested');
-console.log(JSON.stringify({rooms:roomNames,keepsakes:curioIds.length,journalArchive:'persistent',subFloors:'reserved only'},null,2));
+console.log(JSON.stringify({rooms:roomNames,keepsakes:curioIds.length,journalArchive:'persistent',subFloors:'Infinite Cinema implemented separately'},null,2));

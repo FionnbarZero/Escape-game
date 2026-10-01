@@ -28,7 +28,7 @@ for(const [label,text,needle] of [
  ['construction branches',source,'construction predictable transfer'],
  ['spotlight terraces',source,'spotlight stationary upper terrace'],
  ['crane combination',source,'crane middle bridge transfer'],
- ['water creature',source,'courtyard water creature'],
+ ['flooded courtyard route',source,'function buildFloodedCourtyard()'],
  ['fair forced movement',source,'floorTwo.sheltered=true'],
 ])if(!text.includes(needle))throw new Error(`Missing ${label}: ${needle}`);
 

@@ -74,8 +74,11 @@ aside p:before{content:'> ';color:var(--ui-red-bright)}
 #admin-close{width:30px;height:30px;padding:0;border:1px solid rgba(210,165,94,.35);background:#11151a;color:#eee;font:20px/1 monospace!important;cursor:pointer}
 #admin-panel label{display:grid;gap:7px;margin-top:13px;color:rgba(231,220,199,.63);font:700 8px/1 monospace;letter-spacing:.16em}
 #admin-panel select{width:100%;padding:10px;border:1px solid rgba(210,165,94,.35);border-radius:0;background:#101318;color:#f0eadf;font:10px/1.2 monospace}
-#admin-panel>button:not(#admin-close),.admin-actions button{width:100%;margin-top:8px;padding:10px;border:1px solid rgba(210,165,94,.42);background:rgba(210,165,94,.08);color:var(--ui-brass-bright);font:700 9px/1 monospace!important;letter-spacing:.12em;cursor:pointer}
+.admin-selection-detail{margin-top:7px;padding:8px 9px;border-left:2px solid rgba(210,165,94,.55);background:rgba(210,165,94,.055);color:rgba(239,225,194,.72);font:8px/1.45 monospace;letter-spacing:.06em}
+#admin-panel>button:not(#admin-close),.admin-actions button,.admin-overrides>button{width:100%;margin-top:8px;padding:10px;border:1px solid rgba(210,165,94,.42);background:rgba(210,165,94,.08);color:var(--ui-brass-bright);font:700 9px/1 monospace!important;letter-spacing:.12em;cursor:pointer}
 .admin-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.admin-actions button{margin-top:8px}
+.admin-overrides{margin:14px 0 0;padding:10px;border:1px solid rgba(166,50,46,.55);background:rgba(112,22,24,.08)}.admin-overrides legend{padding:0 6px;color:var(--ui-red-bright);font:800 8px/1 monospace;letter-spacing:.16em}.admin-overrides>button{border-color:rgba(222,73,66,.72);background:rgba(170,38,34,.2);color:#fff}.admin-overrides small{display:block;margin-top:8px;color:rgba(235,228,214,.52);font:8px/1.45 monospace}
+.admin-status{display:block;margin-top:12px;padding:9px;border:1px solid rgba(210,165,94,.3);background:#090c10;color:var(--ui-brass-bright);font:800 9px/1.35 monospace;letter-spacing:.08em}.admin-status[data-state="success"]{border-color:rgba(77,188,99,.65);color:#bdf6c3}.admin-status[data-state="error"]{border-color:rgba(222,73,66,.72);color:#ffaaa4}
 #admin-invincible[aria-pressed="true"]{border-color:#8fd597!important;background:rgba(53,135,68,.22)!important;color:#bdf6c3!important;box-shadow:0 0 16px rgba(73,185,91,.18)}
 #admin-panel p{margin:13px 0 0;color:rgba(235,228,214,.48);font:8px/1.5 monospace;letter-spacing:.04em}
 body.admin-open #crosshair{opacity:0}body.admin-open #admin-toggle{border-color:var(--ui-red-bright);color:#fff}

@@ -10,7 +10,6 @@ const MONSTER_JUMPSCARE_PROFILES={
  collector:{variant:'collector',motion:'collector-grab',mark:'KEYS'},
  clockmaker:{variant:'clockmaker',motion:'clockmaker-wind',mark:'XII'},
  'drowned-guest':{variant:'drowned',motion:'drowned-surge',mark:'SOS'},
- 'water-creature':{variant:'water',motion:'water-breach',mark:'≈'},
  pursuer:{variant:'pursuer',motion:'pursuer-intercept',mark:'+'},
  molly:{variant:'molly',motion:'molly-monitor-kill',mark:'00'},
  'stair-monster':{variant:'stair',motion:'stair-zigzag',mark:'↯'},

@@ -20,7 +20,7 @@ const runtime=read('../game/25-runtime.js');
 
 const expected=[
  'bash','purge','noise','chef','collector','clockmaker','drowned-guest','pursuer','molly','stair-monster','cable-mass',
- 'ballroom-guest','watcher','water-creature','gardener','window-creature','false-guest','spider','root',
+ 'ballroom-guest','watcher','gardener','window-creature','false-guest','spider','root',
  'luggage-warden','empty-porter','black-bellhop','reflection','hotel-manager','night-auditor'
 ];
 const catalogBlock=state.slice(state.indexOf('const ADMIN_MONSTER_CATALOG='),state.indexOf('const ADMIN_MONSTER_BEHAVIOR_COPY='));
@@ -49,7 +49,6 @@ const checks=[
  ['Cable Mass bends during its charge',admin,"monster.behavior==='cable-charge'"],
  ['tagged Ballroom Guests freeze visibly',floorTwo,'freezeFloorTwoBallroomGuest'],
  ['Watcher freezes under direct observation',floorTwo,'if(!watched&&distance>.1)'],
- ['Water Creature swims side to side',admin,"monster.behavior==='water-slither'"],
  ['Gardener moss suppresses footsteps',admin,'mossMuffles:true'],
  ['Window Creature punishes its occupied switch',floorTwo,'index===floorTwo.windowCreatureIndex'],
  ['False Guest reveals into a chase',floorTwo,'floorTwo.falseGuestChase=true'],

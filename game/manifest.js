@@ -23,6 +23,7 @@ export const GAME_SCRIPTS = [
   '18-chef-abilities.js',
   '18-noise-runtime.js',
   '19-hotel-run.js',
+  '19-infinite-cinema.js',
   '20-forest.js',
   '21-jailbreak.js',
   '22-story-world.js',

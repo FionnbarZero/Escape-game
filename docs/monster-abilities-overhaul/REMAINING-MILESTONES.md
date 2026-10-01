@@ -16,7 +16,6 @@ These are recorded design milestones only. They are not claimed as implemented b
 ## Milestone 4 — Water encounters
 
 - Drowned Guest: channel currents, warned platform reaches, and the established heavy land transition.
-- Courtyard Water Creature: connected-water channel travel only, with a readable wake and no land pursuit.
 
 ## Milestone 5 — Deception encounters
 

@@ -31,7 +31,6 @@ The game follows the existing blocking-dialog policy: `#puzzle.open` pauses enco
 | Ransack | Recurring hotel rule event | STOP deadline, pass/fail/collection consequence | Preserve |
 | Cable Mass / Staircase Monster | Campaign hazards in elevation/stair routes; also spawn variants | Climbing/charge or zig-zag traversal rules | Preserve |
 | Giant Spider / Root Stalker | Full Cabin encounters | Reflected-ball fight; watched root chase | Preserve |
-| Water Creature | Smaller Floor 2/courtyard-style spawn behavior | Water slither only; no Drowned Guest land behavior | Preserve distinction |
 | Bash | Spawn/random-room variant | Warned, committed lane charge | Spawn variant, not a full boss |
 | Luggage Warden, Empty Porter, Black Bellhop, Reflection, Hotel Manager, Night Auditor | Admin spawn catalog only | Distinct sandbox behaviors | Admin-only; not evidence of campaign bosses |
 

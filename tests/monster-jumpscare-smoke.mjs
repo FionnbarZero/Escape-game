@@ -61,10 +61,10 @@ const checks=[
 ];
 
 for(const [label,source,needle] of checks)if(!source.includes(needle))throw new Error(`${label}: missing ${needle}`);
-const uniqueProfiles=['bash','chef','collector','clockmaker','drowned','water','pursuer','molly','stair','cable','spider','root','gardener','watcher','ballroom-guest','false-guest','window','reflection','warden','porter','bellhop','manager','auditor','cellblock-guard','pursuit-guards','crawler'];
+const uniqueProfiles=['bash','chef','collector','clockmaker','drowned','pursuer','molly','stair','cable','spider','root','gardener','watcher','ballroom-guest','false-guest','window','reflection','warden','porter','bellhop','manager','auditor','cellblock-guard','pursuit-guards','crawler'];
 for(const profile of uniqueProfiles)if(!characterCss.includes(`[data-monster="${profile}"]`))throw new Error(`Missing character portrait: ${profile}`);
 const motions=[...characterCss.matchAll(/@keyframes ([\w-]+)(?=\{)/g)].map(match=>match[1]);
-for(const motion of ['bash-ram','chef-cleave','collector-grab','clockmaker-wind','drowned-surge','water-breach','pursuer-intercept','molly-monitor-kill','stair-zigzag','cable-whip','spider-pounce','root-erupt','gardener-reap','watcher-unseen','guest-waltz','impostor-unmask','window-break','reflection-cross','warden-crush','porter-blink','bellhop-ring','manager-block','auditor-scan','guard-baton','guards-roadblock','crawler-duct-slam'])if(!motions.includes(motion))throw new Error(`Missing unique kill motion: ${motion}`);
+for(const motion of ['bash-ram','chef-cleave','collector-grab','clockmaker-wind','drowned-surge','pursuer-intercept','molly-monitor-kill','stair-zigzag','cable-whip','spider-pounce','root-erupt','gardener-reap','watcher-unseen','guest-waltz','impostor-unmask','window-break','reflection-cross','warden-crush','porter-blink','bellhop-ring','manager-block','auditor-scan','guard-baton','guards-roadblock','crawler-duct-slam'])if(!motions.includes(motion))throw new Error(`Missing unique kill motion: ${motion}`);
 for(const environmental of ['YOU FELL THROUGH THE FLOOR-HOLE CORRIDOR','THE BROKEN RUNG DROPPED YOU INTO THE CABLES']){
  const classifier=floorOne.slice(floorOne.indexOf('function floorOneDeathMonster'),floorOne.indexOf('function failFloorOne'));
  if(classifier.includes(environmental))throw new Error(`Environmental failure incorrectly classified as a monster: ${environmental}`);

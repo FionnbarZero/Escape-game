@@ -30,33 +30,51 @@ function updateHotelStairMonster(dt){
 }
 const updateHotelBeforeSideMonster=updateHotel;updateHotel=function(dt){updateHotelRoomPassage(dt);updateHotelStairMonster(dt);return updateHotelBeforeSideMonster(dt)};
 function updatePlayroomHeight(dt){const crouched=keys.KeyC||keys.ControlLeft||keys.ControlRight||parkourLowProfile(),eyeHeight=crouched?.95:1.7;applyJumpGravity(dt);const oldFeet=playerFeetY;playerFeetY+=verticalVelocity*dt;let landing=0;for(const p of playroomPlatforms)if(Math.abs(camera.position.x-p.x)<p.halfX+.25&&Math.abs(camera.position.z-p.z)<p.halfZ+.25&&p.top<=oldFeet+.18)landing=Math.max(landing,p.top);if(playerFeetY<=landing&&verticalVelocity<=0){playerFeetY=landing;verticalVelocity=0;playerGrounded=true}else playerGrounded=false;camera.position.y=playerFeetY+eyeHeight}
+function finiteMonsterTransform(root){
+ return [root.position.x,root.position.y,root.position.z,root.quaternion.x,root.quaternion.y,root.quaternion.z,root.quaternion.w,root.scale.x,root.scale.y,root.scale.z].every(Number.isFinite)&&root.scale.x!==0&&root.scale.y!==0&&root.scale.z!==0
+}
+function stabilizeActiveMonsterRendering(root){
+ if(!root?.parent)return false;
+ for(let ancestor=root.parent;ancestor&&ancestor!==scene;ancestor=ancestor.parent){
+  if(ancestor.userData?.connectedChunkDormant||ancestor.userData?.connectedChunkRetired)return false;
+  ancestor.visible=true
+ }
+ root.visible=true;
+ if(!root.userData.monsterRenderProtected){
+  root.traverse(object=>{if(object.isMesh||object.isSkinnedMesh||object.isLine||object.isPoints||object.isSprite)object.frustumCulled=false});
+  root.userData.monsterRenderProtected=true
+ }
+ if(finiteMonsterTransform(root)){const saved=root.userData.lastRenderableTransform||(root.userData.lastRenderableTransform={position:[],quaternion:[],scale:[]});root.position.toArray(saved.position);root.quaternion.toArray(saved.quaternion);root.scale.toArray(saved.scale)}
+ else if(root.userData.lastRenderableTransform){const saved=root.userData.lastRenderableTransform;root.position.fromArray(saved.position);root.quaternion.fromArray(saved.quaternion);root.scale.fromArray(saved.scale);root.updateMatrixWorld(true)}
+ return true
+}
 function repairActiveMonsterVisibility(){
  if(roomGroup&&!roomGroup.userData.connectedChunkRetired)roomGroup.visible=true;
- for(const monster of adminMonsters)if(monster.mesh?.parent)monster.mesh.visible=true;
- if(ransack.phase!=='waiting'&&ransackEntity?.parent)ransackEntity.visible=true;
- if(noise?.phase==='hunt'&&noiseEntity?.parent)noiseEntity.visible=true;
- if(hotelNoiseArc?.phase==='hunt'&&hotelNoiseArcEntity?.parent)hotelNoiseArcEntity.visible=true;
- if(floorOne?.huntTimer>0&&floorOneEntity?.parent)floorOneEntity.visible=true;
- if(collector&&!collector.complete&&collectorEntity?.parent)collectorEntity.visible=true;
- if(clockmaker&&!clockmaker.complete&&clockmakerEntity?.parent)clockmakerEntity.visible=true;
- if(drowned&&!drowned.complete&&!drowned.dying&&drownedEntity?.parent)drownedEntity.visible=true;
- if(pursuer&&!pursuer.complete&&!pursuer.dying&&pursuerEntity?.parent)pursuerEntity.visible=true;
- if(molly&&!molly.dying&&mollyEntity?.parent)mollyEntity.visible=true;
- if(eviction&&['attack','reverse'].includes(eviction.phase)&&evictionEntity?.parent)evictionEntity.visible=true;
- if(floorOne?.chefTriggered&&floorOne.chefStage!=='survived'&&floorOneChef?.parent)floorOneChef.visible=true;
- if(floorTwo?.phase===6)for(const guest of floorTwoGuests)if(guest.parent)guest.visible=true;
- if(floorTwo?.phase===7&&!floorTwo.watcherSolved&&floorTwoWatcher?.parent)floorTwoWatcher.visible=true;
- if(floorTwo?.phase===10&&!floorTwo.gardenSolved&&floorTwoGardener?.parent)floorTwoGardener.visible=true;
- if(floorTwo?.phase===11&&!floorTwo.windowPreview&&floorTwo.windowCreatureIndex>=0&&floorTwoWindowCreature?.parent)floorTwoWindowCreature.visible=true;
- if(floorTwo?.phase===12&&floorTwo.falseGuestChase&&floorTwoFalseCreature?.parent)floorTwoFalseCreature.visible=true
- if(rootChaser?.parent&&chaseState&&chaseState.headStart<=0)rootChaser.visible=true;
- if(jailbreakStage===7&&jailbreakChaser?.parent&&jailbreakChaseCooldown<=0)jailbreakChaser.visible=true;
- if(hotelStairMonster?.parent&&['blocked','parkour'].includes(hotelSideScene))hotelStairMonster.visible=true;
- if(room===6&&combat&&creatureModel?.parent)creatureModel.visible=true
+ for(const monster of adminMonsters)stabilizeActiveMonsterRendering(monster.mesh);
+ if(ransack.phase!=='waiting')stabilizeActiveMonsterRendering(ransackEntity);
+ if(noise?.phase==='hunt')stabilizeActiveMonsterRendering(noiseEntity);
+ if(hotelNoiseArc?.phase==='hunt')stabilizeActiveMonsterRendering(hotelNoiseArcEntity);
+ if(floorOne?.huntTimer>0)stabilizeActiveMonsterRendering(floorOneEntity);
+ if(collector&&!collector.complete)stabilizeActiveMonsterRendering(collectorEntity);
+ if(clockmaker&&!clockmaker.complete)stabilizeActiveMonsterRendering(clockmakerEntity);
+ if(drowned&&!drowned.complete&&!drowned.dying)stabilizeActiveMonsterRendering(drownedEntity);
+ if(pursuer&&!pursuer.complete&&!pursuer.dying)stabilizeActiveMonsterRendering(pursuerEntity);
+ if(molly&&!molly.dying)stabilizeActiveMonsterRendering(mollyEntity);
+ if(eviction&&['attack','reverse'].includes(eviction.phase))stabilizeActiveMonsterRendering(evictionEntity);
+ if(floorOne?.chefTriggered&&floorOne.chefStage!=='survived')stabilizeActiveMonsterRendering(floorOneChef);
+ if(floorTwo?.phase===6)for(const guest of floorTwoGuests)stabilizeActiveMonsterRendering(guest);
+ if(floorTwo?.phase===7&&!floorTwo.watcherSolved)stabilizeActiveMonsterRendering(floorTwoWatcher);
+ if(floorTwo?.phase===10&&!floorTwo.gardenSolved)stabilizeActiveMonsterRendering(floorTwoGardener);
+ if(floorTwo?.phase===11&&!floorTwo.windowPreview&&floorTwo.windowCreatureIndex>=0)stabilizeActiveMonsterRendering(floorTwoWindowCreature);
+ if(floorTwo?.phase===12&&floorTwo.falseGuestChase)stabilizeActiveMonsterRendering(floorTwoFalseCreature);
+ if(chaseState&&chaseState.headStart<=0)stabilizeActiveMonsterRendering(rootChaser);
+ if(jailbreakStage===7&&jailbreakChaseCooldown<=0)stabilizeActiveMonsterRendering(jailbreakChaser);
+ if(['blocked','parkour'].includes(hotelSideScene))stabilizeActiveMonsterRendering(hotelStairMonster);
+ if(room===6&&combat)stabilizeActiveMonsterRendering(creatureModel)
 }
 setInterval(repairActiveMonsterVisibility,200);
 let runtimeUiTick=0,journalRenderTick=0;
-function animate(){requestAnimationFrame(animate);const now=performance.now(),rawDt=Math.max(0,(now-previous)/1000),dt=Math.min(.05,rawDt),time=now*.001;previous=now;updateAdaptiveGraphicsPerformance(rawDt);if(journalPaused){if(controls.isLocked)controls.unlock();journalRenderTick+=rawDt;if(journalRenderTick>=.12){journalRenderTick=0;renderer.render(scene,camera)}return}journalRenderTick=0;updateInventoryEffects(dt);updateFirstPersonPresentation(dt,time);if(adminInvincible&&stability!==100)setStability(100);doorTransitionCooldown=Math.max(0,doorTransitionCooldown-dt);slideTimer=Math.max(0,slideTimer-dt);slideCooldown=Math.max(0,slideCooldown-dt);if(controls.isLocked){const before=camera.position.clone(),crouched=keys.KeyC||keys.ControlLeft||keys.ControlRight||parkourAction==='roll',sprinting=(keys.ShiftLeft||keys.ShiftRight)&&!crouched,sliding=slideTimer>0&&crouched,speed=(mazeEscape?4.4:combat?3.8:3.2)*(sliding?2.05:crouched?.48:sprinting?1.75:1)*dt;if(keys.KeyW||keys.ArrowUp)controls.moveForward(speed);if(keys.KeyS||keys.ArrowDown)controls.moveForward(-speed);if(keys.KeyA||keys.ArrowLeft)controls.moveRight(-speed);if(keys.KeyD||keys.ArrowRight)controls.moveRight(speed);updateParkourThrust(dt);if(room===7&&!inLobby&&mazeBlocked(camera.position)){camera.position.x=before.x;camera.position.z=before.z}const boundary=hotelRoomPassage?.boundary||pursuer?.boundary||molly?.boundary||drowned?.boundary||clockmaker?.boundary||collector?.boundary||floorTwo?.boundary||floorOne?.boundary||(inLobby?11.3:room===7?(MAZE_SIZE*MAZE_CELL/2-1):room===6?15.6:room===8?(hotelStage===1?20.3:13.3):6.3);camera.position.x=THREE.MathUtils.clamp(camera.position.x,-boundary,boundary);camera.position.z=THREE.MathUtils.clamp(camera.position.z,-boundary,boundary);crossDoorway();if(room===6&&!inLobby)updatePlayroomHeight(dt);else if(room===7&&mazeEscape&&!inLobby)updateMazeEscapeHeight(dt);else updateBasicPlayerHeight(dt);resolveParkourLanding()}if(combat)updateCombat(dt);if(room===7&&!inLobby){updateMovingMaze(dt);if(mazeEscape)updateEscapeChase(dt);else updateRootChase(dt)}if(room===8&&!inLobby)updateHotel(dt);if(hotelArrivalBellhop)updateHotelArrivalBellhop(dt);if(floorFive)updateFloorFive(dt,time);if(eviction)updateEviction(dt,time);if(noise)updateNoise(dt,time);if(hotelNoiseArc)updateHotelNoiseArc(dt,time);if(floorOne)updateFloorOne(dt,time);if(floorTwo)updateFloorTwo(dt,time);if(collector)updateCollector(dt,time);if(clockmaker)updateClockmaker(dt,time);if(drowned)updateDrowned(dt,time);if(pursuer)updatePursuer(dt,time);if(molly)updateMolly(dt,time);if(dustCloud){dustCloud.rotation.y+=dt*.008;dustCloud.position.y=Math.sin(time*.25)*.08}flickerLights.forEach(l=>l.intensity=l.userData.baseIntensity*(.93+Math.sin(time*11+l.userData.phase)*.035+Math.sin(time*3.7+l.userData.phase)*.025));updateFlashlightBeam(time);dolls.forEach(d=>{d.getObjectByName('head')?.lookAt(camera.position);d.position.lerp(d.userData.origin,dt*3)});runtimeUiTick+=rawDt;if(runtimeUiTick>=.1){runtimeUiTick=0;drawMazeMap();if(aiDebugEnabled)updateMonsterDebugOverlay()}renderer.render(scene,camera)}
+function animate(){requestAnimationFrame(animate);const now=performance.now(),rawDt=Math.max(0,(now-previous)/1000),dt=Math.min(.05,rawDt),time=now*.001;previous=now;updateAdaptiveGraphicsPerformance(rawDt);if(journalPaused){if(controls.isLocked)controls.unlock();journalRenderTick+=rawDt;if(journalRenderTick>=.12){journalRenderTick=0;renderer.render(scene,camera)}return}journalRenderTick=0;updateInventoryEffects(dt);updateFirstPersonPresentation(dt,time);if(adminInvincible&&stability!==100)setStability(100);doorTransitionCooldown=Math.max(0,doorTransitionCooldown-dt);slideTimer=Math.max(0,slideTimer-dt);slideCooldown=Math.max(0,slideCooldown-dt);if(controls.isLocked){const before=camera.position.clone(),crouched=keys.KeyC||keys.ControlLeft||keys.ControlRight||parkourAction==='roll',sprinting=(keys.ShiftLeft||keys.ShiftRight)&&!crouched,sliding=slideTimer>0&&crouched,speed=(mazeEscape?4.4:combat?3.8:3.2)*(sliding?2.05:crouched?.48:sprinting?1.75:1)*dt;if(keys.KeyW||keys.ArrowUp)controls.moveForward(speed);if(keys.KeyS||keys.ArrowDown)controls.moveForward(-speed);if(keys.KeyA||keys.ArrowLeft)controls.moveRight(-speed);if(keys.KeyD||keys.ArrowRight)controls.moveRight(speed);updateParkourThrust(dt);if(room===7&&!inLobby&&mazeBlocked(camera.position)){camera.position.x=before.x;camera.position.z=before.z}const boundary=hotelRoomPassage?.boundary||pursuer?.boundary||molly?.boundary||drowned?.boundary||clockmaker?.boundary||collector?.boundary||floorTwo?.boundary||floorOne?.boundary||(inLobby?11.3:room===7?(MAZE_SIZE*MAZE_CELL/2-1):room===6?15.6:room===8?(hotelStage===1?20.3:13.3):6.3);camera.position.x=THREE.MathUtils.clamp(camera.position.x,-boundary,boundary);camera.position.z=THREE.MathUtils.clamp(camera.position.z,-boundary,boundary);crossDoorway();if(room===6&&!inLobby)updatePlayroomHeight(dt);else if(room===7&&mazeEscape&&!inLobby)updateMazeEscapeHeight(dt);else updateBasicPlayerHeight(dt);resolveParkourLanding()}if(combat)updateCombat(dt);if(room===7&&!inLobby){updateMovingMaze(dt);if(mazeEscape)updateEscapeChase(dt);else updateRootChase(dt)}if(room===8&&!inLobby)updateHotel(dt);if(hotelArrivalBellhop)updateHotelArrivalBellhop(dt);if(floorFive)updateFloorFive(dt,time);if(eviction)updateEviction(dt,time);if(noise)updateNoise(dt,time);if(hotelNoiseArc)updateHotelNoiseArc(dt,time);if(floorOne)updateFloorOne(dt,time);if(floorTwo)updateFloorTwo(dt,time);if(collector)updateCollector(dt,time);if(clockmaker)updateClockmaker(dt,time);if(drowned)updateDrowned(dt,time);if(pursuer)updatePursuer(dt,time);if(molly)updateMolly(dt,time);if(dustCloud){dustCloud.rotation.y+=dt*.008;dustCloud.position.y=Math.sin(time*.25)*.08}flickerLights.forEach(l=>l.intensity=l.userData.baseIntensity*(.93+Math.sin(time*11+l.userData.phase)*.035+Math.sin(time*3.7+l.userData.phase)*.025));updateFlashlightBeam(time);dolls.forEach(d=>{d.getObjectByName('head')?.lookAt(camera.position);d.position.lerp(d.userData.origin,dt*3)});runtimeUiTick+=rawDt;if(runtimeUiTick>=.1){runtimeUiTick=0;drawMazeMap();if(aiDebugEnabled)updateMonsterDebugOverlay()}repairActiveMonsterVisibility();renderer.render(scene,camera)}
 
 let fallbackMovementPrevious=performance.now();
 function animateKeyboardFallback(now){

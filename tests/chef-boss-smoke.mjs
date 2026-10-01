@@ -37,7 +37,7 @@ for(const [destination,expectedTitle,expectedStage,expectedPhase] of phaseChecks
  if(state.title!==expectedTitle||state.run?.chefStage!==expectedStage||!state.phase.includes(expectedPhase)||!state.boss||state.noise)throw new Error('Chef advanced phase failed: '+JSON.stringify({destination,state}));
  phases.push(state.run.chefStage);
 }
-const expectedMonsters=['bash','purge','noise','chef','collector','clockmaker','drowned-guest','pursuer','molly','stair-monster','cable-mass','ballroom-guest','watcher','water-creature','gardener','window-creature','false-guest','spider','root','luggage-warden','empty-porter','black-bellhop','reflection','hotel-manager','night-auditor'];
+const expectedMonsters=['bash','purge','noise','chef','collector','clockmaker','drowned-guest','pursuer','molly','stair-monster','cable-mass','ballroom-guest','watcher','gardener','window-creature','false-guest','spider','root','luggage-warden','empty-porter','black-bellhop','reflection','hotel-manager','night-auditor'];
 const monsterOptions=await evaluate(`[...document.querySelector('#admin-monster').options].map(option=>option.value)`);
 if(JSON.stringify(monsterOptions)!==JSON.stringify(expectedMonsters))throw new Error('Admin monster catalog mismatch: '+JSON.stringify(monsterOptions));
 const monsterBehaviors=await evaluate(`[...document.querySelector('#admin-monster').options].map(option=>({id:option.value,behavior:option.dataset.behavior,pattern:option.dataset.pattern,wallMode:option.dataset.wallMode}))`);

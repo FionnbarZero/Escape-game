@@ -1,0 +1,44 @@
+const endpoint=process.env.HOTEL_CDP_ENDPOINT||'http://127.0.0.1:9250';
+const gameUrl=process.env.HOTEL_GAME_URL||'http://127.0.0.1:8765/';
+const pages=await fetch(endpoint+'/json/list').then(response=>response.json());
+const page=pages.find(entry=>entry.type==='page'&&entry.url.startsWith(new URL(gameUrl).origin))||pages.find(entry=>entry.type==='page'&&entry.url==='about:blank')||pages.find(entry=>entry.type==='page');
+if(!page)throw new Error('Hotel Nocturne browser page not found');
+const socket=new WebSocket(page.webSocketDebuggerUrl);
+await new Promise((resolve,reject)=>{socket.addEventListener('open',resolve,{once:true});socket.addEventListener('error',reject,{once:true})});
+const fail=message=>{socket.close();throw new Error(message)};
+let nextId=0;
+const pending=new Map(),exceptions=[];
+socket.addEventListener('message',event=>{const message=JSON.parse(event.data);if(message.method==='Runtime.exceptionThrown')exceptions.push(message.params.exceptionDetails.exception?.description||message.params.exceptionDetails.text);if(!message.id)return;const request=pending.get(message.id);if(!request)return;pending.delete(message.id);message.error?request.reject(new Error(message.error.message)):request.resolve(message.result)});
+const send=(method,params={})=>new Promise((resolve,reject)=>{const id=++nextId;pending.set(id,{resolve,reject});socket.send(JSON.stringify({id,method,params}))});
+const evaluate=async expression=>{const result=await send('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});if(result.exceptionDetails)throw new Error(result.exceptionDetails.exception?.description||result.exceptionDetails.text);return result.result.value};
+const wait=milliseconds=>new Promise(resolve=>setTimeout(resolve,milliseconds));
+await send('Runtime.enable');
+await send('Page.enable');
+await send('Network.enable');
+await send('Network.setCacheDisabled',{cacheDisabled:true});
+await send('Page.navigate',{url:`${gameUrl}?quality=low&verify=infinite-cinema&cache=${Date.now()}`});
+for(let attempt=0;attempt<600;attempt++){
+ if(await evaluate(`document.body.dataset.gameReady==='true'&&typeof startInfiniteCinema==='function'&&typeof handleInfiniteCinema==='function'`))break;
+ await wait(100);
+ if(attempt===599)fail(`Game did not initialize: ready=${await evaluate('document.body.dataset.gameReady')} prompt=${await evaluate("document.querySelector('#prompt')?.textContent")} exceptions=${exceptions.join(' | ')}`);
+}
+exceptions.length=0;
+const result=await evaluate(`(()=>{
+ if(dlg.open)dlg.close();localStorage.removeItem(INFINITE_CINEMA_KEY);infiniteCinema=newInfiniteCinemaState();hotelArrivalItems.add('room304-key');for(const id of ['purge-survived','floor-one-checkout','floor-two-room140','doors-style-run-escaped'])hotelProgress.add(id);buildStoryLobby();const badgeState=lobbyBadgeUnlockProgress(),lobbyTrigger=interactables.find(object=>object.userData.type==='lobby-progression-door'&&object.userData.part==='badges');handleLobbyProgressionDoor('badges',lobbyTrigger);const lobbyOpened=Boolean(hotelRoomPassage),enterSunroom=hotelRoomPassage?.advance;hotelRoomPassage=null;enterSunroom();if(dlg.open)dlg.close();const sunroom={scene:hotelSideScene,title:document.querySelector('#title').textContent,glass:Boolean(roomGroup.getObjectByName('sunroom glass roof')),cinemaDoor:interactables.some(object=>object.userData.type==='infinite-cinema'&&object.userData.part==='sunroom-exit')};const sunroomExit=interactables.find(object=>object.userData.type==='infinite-cinema'&&object.userData.part==='sunroom-exit');handleInfiniteCinema('sunroom-exit',sunroomExit);const cinemaOpened=Boolean(hotelRoomPassage),enterCinema=hotelRoomPassage?.advance;hotelRoomPassage=null;enterCinema();if(dlg.open)dlg.close();
+ const before={scene:hotelSideScene,room:infiniteCinema.room,title:document.querySelector('#title').textContent,projector:interactables.some(object=>object.userData.type==='infinite-cinema'&&object.userData.part==='projector'),transformed:Boolean(roomGroup.getObjectByName('cinema movie transformation'))};
+ handleInfiniteCinema('projector');if(dlg.open)dlg.close();const reelTrigger=interactables.find(object=>object.userData.type==='infinite-cinema'&&object.userData.part==='next-reel');const afterProjection={transformed:Boolean(roomGroup.getObjectByName('cinema movie transformation')),railway:Boolean(roomGroup.getObjectByName('movie railway platform')),nextReel:Boolean(reelTrigger),screened:infiniteCinema.screened.includes(0)};
+ const exitTrigger=interactables.find(object=>object.userData.type==='infinite-cinema'&&object.userData.part==='exit');handleInfiniteCinema('exit',exitTrigger);if(dlg.open)dlg.close();const blocked=!hotelRoomPassage;
+ handleInfiniteCinema('next-reel',reelTrigger);if(dlg.open)dlg.close();handleInfiniteCinema('exit',exitTrigger);const opened=Boolean(hotelRoomPassage),advance=hotelRoomPassage?.advance;hotelRoomPassage=null;advance();if(dlg.open)dlg.close();
+ const nextRoom={room:infiniteCinema.room,held:infiniteCinema.heldFilm,title:document.querySelector('#title').textContent,scene:hotelSideScene,journal:journalPlaces.has('infinite-cinema'),persisted:JSON.parse(localStorage.getItem(INFINITE_CINEMA_KEY)||'{}').room};
+ return{badgeState,lobbyOpened,sunroom,cinemaOpened,before,afterProjection,blocked,opened,nextRoom};
+})()`);
+if(result.badgeState.done!==5||result.badgeState.total!==5||!result.badgeState.unlocked||!result.lobbyOpened)fail(`Five badges did not open Door III: ${JSON.stringify(result)}`);
+if(result.sunroom.scene!=='badge-sunroom'||result.sunroom.title!=='The Sunroom'||!result.sunroom.glass||!result.sunroom.cinemaDoor||!result.cinemaOpened)fail(`Sunroom did not connect the lobby to the cinema: ${JSON.stringify(result)}`);
+if(result.before.scene!=='infinite-cinema'||result.before.room!==0||!result.before.projector||result.before.transformed)fail(`Cinema did not start correctly: ${JSON.stringify(result)}`);
+if(!result.afterProjection.transformed||!result.afterProjection.railway||!result.afterProjection.nextReel||!result.afterProjection.screened)fail(`Film did not transform the cinema: ${JSON.stringify(result)}`);
+if(!result.blocked||!result.opened)fail(`Cinema film gate failed: ${JSON.stringify(result)}`);
+if(result.nextRoom.room!==1||result.nextRoom.held!=='tide-kingdom'||!result.nextRoom.title.includes('02')||result.nextRoom.scene!=='infinite-cinema'||!result.nextRoom.journal||result.nextRoom.persisted!==1)fail(`Cinema did not advance persistently: ${JSON.stringify(result)}`);
+const unexpected=exceptions.filter(error=>!error.toLowerCase().includes('pointer lock'));
+if(unexpected.length)fail(`Browser exceptions: ${unexpected.join(' | ')}`);
+socket.close();
+console.log(JSON.stringify({...result,gameplayExceptions:0},null,2));

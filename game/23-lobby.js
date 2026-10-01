@@ -7,7 +7,7 @@ const LOBBY_PROGRESSION_DOORS=Object.freeze([
 let lobbyOpenedProgressDoors=new Set();
 function lobbyBadgeDefinitions(){
  return[
-  {id:'first-check-in',glyph:'I',name:'FIRST CHECK-IN',copy:'Receive the key to Room 304.',earned:hotelArrivalItems.has('room304-key')},
+  {id:'first-check-in',glyph:'I',name:'FIRST CHECK-IN',copy:'Receive the key to Room 304.',earned:hotelArrivalItems.has('room304-key')||hotelArrivalItems.has('room304-key-used')},
   {id:'scrap-metal',glyph:'P',name:'SCRAP METAL',copy:'Survive The Purge.',earned:hotelProgress.has('purge-survived')||sessionStorage.getItem('infinite-hotel-purge-complete-v1')==='true'||hotelRunItems.has('purge-survived')},
   {id:'last-service',glyph:'C',name:'LAST SERVICE',copy:'Escape the Chef’s kitchen.',earned:hotelProgress.has('floor-one-checkout')},
   {id:'severed-facade',glyph:'Ⅱ',name:'SEVERED FAÇADE',copy:'Reach the Room 140 vault.',earned:hotelProgress.has('floor-two-room140')},
@@ -16,22 +16,32 @@ function lobbyBadgeDefinitions(){
 }
 function lobbyJournalUnlockProgress(){if(typeof syncJournalDiscovery==='function')syncJournalDiscovery();const total=SURVIVOR_JOURNAL_ENTRIES?.length||0,done=SURVIVOR_JOURNAL_ENTRIES?.filter(entry=>journalLevel(entry.id)>0).length||0;return{done,total,unlocked:total>0&&done===total}}
 function lobbyBadgeUnlockProgress(){const badges=lobbyBadgeDefinitions(),done=badges.filter(badge=>badge.earned).length;return{done,total:badges.length,unlocked:badges.length>0&&done===badges.length}}
+const LOBBY_BADGE_NOTICE_KEY='hotel-badge-notifications-v1';
+let lobbyBadgeNotified=(()=>{try{const savedNotice=localStorage.getItem(LOBBY_BADGE_NOTICE_KEY);if(savedNotice)return new Set(JSON.parse(savedNotice));const earned=new Set(lobbyBadgeDefinitions().filter(badge=>badge.earned).map(badge=>badge.id));localStorage.setItem(LOBBY_BADGE_NOTICE_KEY,JSON.stringify([...earned]));return earned}catch{return new Set()}})();
+function syncLobbyBadgeNotifications(){const badges=lobbyBadgeDefinitions(),newBadges=badges.filter(badge=>badge.earned&&!lobbyBadgeNotified.has(badge.id));if(!newBadges.length)return false;for(const badge of newBadges){lobbyBadgeNotified.add(badge.id);const done=badges.filter(entry=>entry.earned).length;queueProgressNotice(`BADGE EARNED · ${done} / ${badges.length}`,`${badge.name} — ${badge.copy}`)}localStorage.setItem(LOBBY_BADGE_NOTICE_KEY,JSON.stringify([...lobbyBadgeNotified]));if(badges.every(badge=>badge.earned))queueProgressNotice('ALL FIVE BADGES COMPLETE','Door III has unlocked in the Night Lobby. It leads through the Sunroom to Sub-Floor One.');if(inLobby)refreshLobbyProgressionDoors();return true}
+setInterval(syncLobbyBadgeNotifications,400);
 function lobbyCampaignComplete(){return hotelProgress.has('floor-two-room140')||hotelProgress.has('escaped')}
 function lobbyProgressDoorState(id){
  if(id==='journals'){const progress=lobbyJournalUnlockProgress();return{...progress,detail:`${progress.done} / ${progress.total} JOURNAL RECORDS`}}
  if(id==='campaign')return{done:lobbyCampaignComplete()?1:0,total:1,unlocked:lobbyCampaignComplete(),detail:lobbyCampaignComplete()?'HOTEL NOCTURNE COMPLETE':'COMPLETE HOTEL NOCTURNE'};
  const progress=lobbyBadgeUnlockProgress();return{...progress,detail:`${progress.done} / ${progress.total} BADGES`}
 }
+function ensureBadgeSunroomPassage(){
+ const existing=roomGroup.getObjectByName('badge sunroom passage trigger');if(existing){if(!interactables.includes(existing))interactables.push(existing);objectLabel('DOOR III · SUNROOM',[5,4.25,-8.25],.48);objectLabel('ALL FIVE BADGES · E OPEN',[5,.58,-7.95],.2);return existing}
+ const fake=roomGroup.getObjectByName('hotel story door')||roomGroup.getObjectByName('lobby progression door badges');if(fake){fake.removeFromParent();solidColliders=solidColliders.filter(collider=>collider.mesh!==fake)}
+ const trigger=addSeamlessHotelPassage({depth:18,width:24,height:5,x:5,doorWidth:4,wall:0x51485a,floor:0x3c3042,door:0x62513b,label:'DOOR III · SUNROOM',type:'lobby-progression-door',part:'badges'});trigger.name='badge sunroom passage trigger';trigger.userData.hotelPassage.door.name='badge sunroom passage door';objectLabel('ALL FIVE BADGES · E OPEN',[5,.58,-7.95],.2);return trigger
+}
 function refreshLobbyProgressionDoors(){
- if(!inLobby||!roomGroup)return;interactables=interactables.filter(item=>item.userData.type!=='story-choice'&&item.userData.type!=='lobby-progression-door');
+ if(!inLobby||!roomGroup)return;interactables=interactables.filter(item=>item.userData.type!=='story-choice'&&(item.userData.type!=='lobby-progression-door'||Boolean(item.userData.hotelPassage)));
  for(const child of [...roomGroup.children])if(['label:THE CABIN THAT WATCHES','label:THE INFINITE HOTEL · ROOM 13','label:JAILBREAK · BLACKRIDGE','label:WEST LOUNGE','label:EAST LOUNGE','label:SERVICE ELEVATOR · CLOSED'].includes(child.name)||child.name.startsWith('label:DOOR ')||child.name==='label:E · OPEN'||LOBBY_PROGRESSION_DOORS.some(door=>child.name.startsWith(`label:${door.requirement}`)))child.removeFromParent();
  for(const door of LOBBY_PROGRESSION_DOORS){
-  const mesh=roomGroup.getObjectByName(door.meshName)||roomGroup.getObjectByName(`lobby progression door ${door.id}`);if(!mesh)continue;const state=lobbyProgressDoorState(door.id),opened=state.unlocked&&lobbyOpenedProgressDoors.has(door.id);mesh.name=`lobby progression door ${door.id}`;mesh.userData.progressionDoorId=door.id;mesh.material.color.setHex(state.unlocked?0x62513b:0x2c292d);mesh.material.emissive.setHex(state.unlocked?0x382810:0x120c0d);mesh.material.emissiveIntensity=state.unlocked?.72:.24;if(opened){mesh.rotation.y=-Math.PI*.43;solidColliders=solidColliders.filter(collider=>collider.mesh!==mesh)}
+  const state=lobbyProgressDoorState(door.id);if(door.id==='badges'&&state.unlocked){ensureBadgeSunroomPassage();continue}const mesh=roomGroup.getObjectByName(door.meshName)||roomGroup.getObjectByName(`lobby progression door ${door.id}`);if(!mesh)continue;const opened=state.unlocked&&lobbyOpenedProgressDoors.has(door.id);mesh.name=`lobby progression door ${door.id}`;mesh.userData.progressionDoorId=door.id;mesh.material.color.setHex(state.unlocked?0x62513b:0x2c292d);mesh.material.emissive.setHex(state.unlocked?0x382810:0x120c0d);mesh.material.emissiveIntensity=state.unlocked?.72:.24;if(opened){mesh.rotation.y=-Math.PI*.43;solidColliders=solidColliders.filter(collider=>collider.mesh!==mesh)}
   const trigger=interactive([door.x,1.9,-8.05],[door.id==='campaign'?3.5:4.3,4.1,1],0,'lobby-progression-door',door.id);trigger.name=`lobby progression trigger ${door.id}`;objectLabel(`DOOR ${door.roman} · ${state.unlocked?'UNLOCKED':'LOCKED'}`,[door.x,4.25,-8.25],.48);objectLabel(state.unlocked?'E · OPEN':`${door.requirement} · ${state.detail}`,[door.x,.58,-7.95],.2)
  }
 }
-function handleLobbyProgressionDoor(id){
+function handleLobbyProgressionDoor(id,trigger){
  const definition=LOBBY_PROGRESSION_DOORS.find(door=>door.id===id);if(!definition)return;const state=lobbyProgressDoorState(id);if(!state.unlocked){controls.unlock();return message(`DOOR ${definition.roman} · LOCKED`,`${definition.requirement}. Progress: ${state.detail}.`)}
+ if(id==='badges'){lobbyOpenedProgressDoors.add(id);hideStorySelection();document.querySelector('#prompt').textContent='DOOR III OPENING · WALK INTO THE SUNROOM';controls.lock();return beginHotelRoomPassage(trigger,buildBadgeSunroom)}
  if(lobbyOpenedProgressDoors.has(id)){controls.unlock();return message(`DOOR ${definition.roman} · UNLOCKED`,'The lock is open. The room beyond this doorway will be connected after its contents are defined.')}
  lobbyOpenedProgressDoors.add(id);pickupTone();playPurgeCrash();refreshLobbyProgressionDoors();document.querySelector('#prompt').textContent=`DOOR ${definition.roman} UNLOCKED · ROOM CONNECTION PENDING`
 }
