@@ -1,6 +1,6 @@
 const endpoint=process.env.HOTEL_CDP_ENDPOINT||'http://127.0.0.1:9231';
 const pages=await fetch(endpoint+'/json/list').then(response=>response.json());
-const page=pages.find(entry=>entry.type==='page'&&entry.url.includes('verify=seamless-hotel'));
+const page=pages.find(entry=>entry.type==='page'&&entry.url.includes('127.0.0.1:8765'));
 if(!page)throw new Error('Seamless hotel test page not found');
 
 const socket=new WebSocket(page.webSocketDebuggerUrl);
@@ -15,7 +15,7 @@ await send('Runtime.enable');
 await send('Page.enable');
 await send('Network.enable');
 await send('Network.setCacheDisabled',{cacheDisabled:true});
-await send('Page.reload',{ignoreCache:true});
+await send('Page.navigate',{url:`http://127.0.0.1:8765/?quality=low&verify=seamless-hotel&cache=${Date.now()}`});
 for(let attempt=0;attempt<600;attempt++){
  if(await evaluate(`typeof document.querySelector('#admin-teleport-go')?.onclick==='function'`))break;
  await new Promise(resolve=>setTimeout(resolve,100));

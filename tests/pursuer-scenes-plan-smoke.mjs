@@ -22,6 +22,8 @@ const hooks=[
  "maybeStartRandomPursuer('floor2',floorTwo,saveFloorTwo,roomKey,[3,4,5,6],.17)"
 ];
 for(const hook of hooks)if(!source.includes(hook))throw new Error(`Missing randomized progression hook: ${hook}`);
+if(!source.includes("startPursuerEncounter(scene,'hotel-run',true)"))throw new Error('The numbered hotel run has no Pursuer chase milestone');
+if(!source.includes("if(origin==='hotel-run')return buildHotelRunRoom()"))throw new Error('The Pursuer cannot return to the numbered hotel run');
 if(source.includes("floorFive.index===5&&maybeStartPursuer")||source.includes('const pursuerScene=floorTwo.phase==='))throw new Error('A Pursuer chase is still attached to a predictable fixed room');
 if(!source.includes('cancelNoise();cancelHotelNoiseArc();'))throw new Error('Pursuer scenes do not suppress both Noise systems');
 if(!source.includes('pursuer.phase=1;pursuer.revealTimer=2.8'))throw new Error('Capture does not reset to the chase entrance checkpoint');

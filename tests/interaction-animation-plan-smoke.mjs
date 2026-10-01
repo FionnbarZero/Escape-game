@@ -10,15 +10,15 @@ const requiredSystems=[
  ['inventory/viewmodel synchronization','syncFirstPersonHeldItem();'],
  ['pickup animation',"playFirstPersonAction('pickup'"],
  ['item-use animation',"playFirstPersonAction('use'"],
- ['drawer hand animation',"playFirstPersonAction('drawer'"],
+ ['drawer hand animation',"playContactAction(to?'drawer-open':'drawer-close'"],
  ['physical drawer motion','function animateDrawerMesh(mesh)'],
  ['closet camera transition','function updateHotelHideTransition(dt)'],
- ['closet enter animation',"playFirstPersonAction('closet-enter'"],
- ['closet exit animation',"playFirstPersonAction('closet-exit'"]
+ ['closet enter animation',"playContactAction('closet-enter'"],
+ ['closet exit animation',"playContactAction('closet-exit'"]
 ];
 for(const [name,needle] of requiredSystems)if(!source.includes(needle))throw new Error(`Missing ${name}`);
 if((source.match(/userData\.drawerMesh=drawer/g)||[]).length<3)throw new Error('Shared Floor 5, Floor 1, and Floor 2 drawers are not connected to physical animation meshes');
-if(!source.includes('leftDoor:left,rightDoor:right'))throw new Error('Closet doors are not attached to hiding-spot animation state');
+if(!source.includes('leftDoor:left.pivot,rightDoor:right?.pivot'))throw new Error('Closet and wardrobe doors are not attached to hiding-spot animation state');
 if(!source.includes("slowDrawer=part==='slow-drawer'||data.type==='noise-arc'&&part==='drawer'"))throw new Error('Slow Noise drawers are not protected from the instant drawer animation');
 if(!css.includes('body.hotel-hiding-transition #game')||!css.includes('@keyframes closet-door-vignette'))throw new Error('Closet transition presentation is missing');
 

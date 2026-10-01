@@ -35,25 +35,77 @@ const SURVIVOR_JOURNAL_ENTRIES=[
  {id:'watching-figures',name:'Watching Figures',learn:'Some dolls, mannequins, shadows, and other figures watch or move without beginning a damaging encounter.',survive:'Stay aware, but do not assume every unsettling figure needs a combat solution. These are atmospheric scares unless the game gives them an active pursuit behavior.',note:'Not everything that watches me is chasing me. Remembering that is harder than it should be.'}
 ];
 
+const SURVIVOR_JOURNAL_OPINIONS={
+ bash:'I almost respect how plainly it announces the danger. Almost.',
+ purge:'This is the hotel at its cruelest: a warning, one correct shelter, and no negotiation.',
+ noise:'It frightens me most when I catch myself blaming my own footsteps for what it chooses to do.',
+ chef:'He treats the kitchen like a stage. I refuse to become the final course.',
+ collector:'I do not think it loves its collection. I think it fears anything leaving.',
+ clockmaker:'The rhythm is beautiful until I remember that it is measuring my mistakes.',
+ 'drowned-guest':'There is something sad beneath all that water, but sympathy is dangerous at close range.',
+ pursuer:'It feels less like an animal and more like a bad ending trying to arrive early.',
+ molly:'I cannot decide whether 00 is her resting face or the closest she comes to being calm.',
+ 'staircase-monster':'It looks awkward until it climbs. Then I remember that the awkwardness belongs to me.',
+ 'cable-mass':'I suspect the hotel made it from every wire someone thought they had safely hidden.',
+ 'ballroom-guest':'The game would almost be fun if losing did not mean being taken by a smiling stranger.',
+ watcher:'It makes attention feel like a physical object I can drop.',
+ 'water-creature':'On dry stone it looks stranded. In connected water, I am the one out of place.',
+ gardener:'The maze is cared for with more patience than any guest has ever received.',
+ 'window-creature':'Windows should show what is outside. These feel like places where something waits to be selected.',
+ 'false-guest':'The worst part is how badly I want one of the friendly faces to be real.',
+ 'giant-spider':'The red ball makes the encounter absurd, which somehow makes the spider more upsetting.',
+ 'root-stalker':'I think the Heart chamber refuses it for a reason. I am grateful without understanding why.',
+ 'luggage-warden':'It behaves like every route belongs to it and every traveler is misplaced baggage.',
+ 'empty-porter':'A missing face should make it less expressive. It does not.',
+ 'black-bellhop':'Every ring sounds professional, practiced, and completely hateful.',
+ reflection:'I know it is not me. I still feel responsible whenever it moves.',
+ 'hotel-manager':'Anyone who needs the building itself to prove their authority probably does not possess much authority.',
+ 'night-auditor':'It has the patience of someone certain that every guest eventually has to settle an account.',
+ ransack:'I resent that following one simple instruction can feel like surrender.',
+ 'elevator-boss':'He may be the closest thing here to honest hotel staff, which is not reassuring.',
+ 'door-boss':'I prefer a gatekeeper with a clear price to a creature with an unclear appetite.',
+ 'vent-crawler':'The vents make every sound intimate. I would rather not know how close it is.',
+ 'cellblock-guard':'A human threat can be understood, but understanding does not make the searchlight less bright.',
+ 'pursuit-guards':'They make the final road feel narrower every time I look back.',
+ 'watching-figures':'I keep telling myself they are only scenery. Scenery should not need convincing.'
+};
+for(const entry of SURVIVOR_JOURNAL_ENTRIES)entry.opinion=SURVIVOR_JOURNAL_OPINIONS[entry.id];
+
 const JOURNAL_ENTRY_BY_ID=new Map(SURVIVOR_JOURNAL_ENTRIES.map(entry=>[entry.id,entry]));
 const JOURNAL_KIND_ALIASES={spider:'giant-spider',root:'root-stalker','stair-monster':'staircase-monster','masked-guest':'ballroom-guest','fake-guest':'false-guest','the-purge':'purge','the-noise':'noise'};
+const HOTEL_PLACE_DISCOVERIES=[
+ {id:'forgotten-suite',name:'The Forgotten Suite',where:'ELECTRICAL RECEPTION · ROOM 217',copy:'This room was left off the corridor directory. Someone stayed long enough to pack, begin a letter, and cover one face in a photograph. The abandoned supplies were useful, but the missing name is the real discovery.'},
+ {id:'maintenance-observation',name:'Maintenance Observation Room',where:'ELECTRICAL RECEPTION · SERVICE PANEL',copy:'The reinforced window overlooks Molly&apos;s reception route and its ordinary exits. It is useful for planning, but Molly can still enter the connected corridor and the room is not a hiding place.'},
+ {id:'electrical-shortcut',name:'Maintenance Passage',where:'ELECTRICAL SECTION · RECEPTION RETURN',copy:'The maintenance door beside reception opens from the corridor side. I released its latch. It gives me a shorter route back to the code machine, but it does not disable Molly, hacked shutters, or the three main levers.'}
+];
+const HOTEL_PLACE_BY_ID=new Map(HOTEL_PLACE_DISCOVERIES.map(entry=>[entry.id,entry]));
 let journalPaused=false,journalResumeLocked=false,journalPreviousFocus=null,journalSelectedId='opening';
 let journalDiscoveries=(()=>{try{return JSON.parse(localStorage.getItem('hotel-survivor-journal-v1')||'{}')}catch{return{}}})();
+let journalCurios=new Set((()=>{try{return JSON.parse(localStorage.getItem('hotel-survivor-curios-v1')||'[]')}catch{return[]}})());
+let journalPlaces=new Set((()=>{try{return JSON.parse(localStorage.getItem('hotel-survivor-places-v1')||'[]')}catch{return[]}})());
 
 function saveJournalDiscoveries(){localStorage.setItem('hotel-survivor-journal-v1',JSON.stringify(journalDiscoveries))}
+function saveJournalCurios(){localStorage.setItem('hotel-survivor-curios-v1',JSON.stringify([...journalCurios]))}
+function saveJournalPlaces(){localStorage.setItem('hotel-survivor-places-v1',JSON.stringify([...journalPlaces]))}
+function journalDiscoverPlace(id){if(!HOTEL_PLACE_BY_ID.has(id)||journalPlaces.has(id))return false;journalPlaces.add(id);saveJournalPlaces();if(journalPaused)renderSurvivorJournal();return true}
+function journalDiscoverCurio(id){if(!String(id).startsWith('curio-')||journalCurios.has(id))return false;journalCurios.add(id);saveJournalCurios();if(journalPaused)renderSurvivorJournal();return true}
 function journalEntryId(kind=''){const normalized=String(kind).toLowerCase();return JOURNAL_KIND_ALIASES[normalized]||normalized}
 function journalDiscover(kind,level=1){const id=journalEntryId(kind);if(!JOURNAL_ENTRY_BY_ID.has(id))return false;const next=Math.max(1,Math.min(3,level)),previous=Number(journalDiscoveries[id]||0);if(next<=previous)return false;journalDiscoveries[id]=next;saveJournalDiscoveries();if(journalPaused)renderSurvivorJournal();return true}
 function journalLevel(id){return Number(journalDiscoveries[id]||0)}
 function journalShowAdvice(){return document.querySelector('#journal-show-advice')?.checked||localStorage.getItem('hotel-journal-show-advice')==='true'}
-function journalOpeningMarkup(){return`<div class="journal-opening"><span class="journal-page__number">NOTES FOR THE NEXT GUEST</span><h3>Hotel Nocturne</h3><div class="journal-opening__rule"></div><p>Not everything here can be defeated. Some things must be avoided. Some things must be distracted. Others will let you pass once you understand what they want.</p><p>I have written the rules I could confirm.</p><blockquote>A blank space means I do not know.<br><br>It does not mean you are safe.</blockquote></div>`}
+function journalOpeningMarkup(){return`<div class="journal-opening"><span class="journal-page__number">NOTES FOR THE NEXT GUEST</span><h3>Hotel Nocturne</h3><div class="journal-opening__rule"></div><p>Not everything here can be defeated. Some things must be avoided. Some things must be distracted. Others will let you pass once you understand what they want.</p><p>I have written the rules I could confirm, the keepsakes I found, and a few opinions I probably should have kept to myself.</p><section><small>UNMAPPED AREAS</small><p>Several elevator plates contain blank positions below the known floors. I call them the <b>sub-floors</b>. I have not found an open route into them, so these pages make no claims about what is there.</p></section><blockquote>A blank space means I do not know.<br><br>It does not mean you are safe.</blockquote></div>`}
+function journalCurioMarkup(){const rooms=hotelRunFloors.flatMap(floor=>floor.rooms),found=rooms.filter(def=>journalCurios.has(def.special.id));return`<span class="journal-page__number">ROOM KEEPSAKES · ${found.length} / ${rooms.length}</span><h3>Room Curios</h3><b class="journal-page__status">PERSISTENT ARCHIVE</b><p>Each numbered room contains one optional object. Finding it records it here permanently, even when the hotel run begins again.</p>${rooms.map(def=>journalCurios.has(def.special.id)?`<section><small>ROOM ${def.number} · ${def.roomName}</small><h4>${def.special.label}</h4><p>${def.special.copy}</p><blockquote>“${def.special.opinion}”</blockquote></section>`:`<section><small>ROOM ${def.number}</small><h4>UNKNOWN KEEPSAKE</h4><p class="journal-page__locked">I have not recorded the special item in this room.</p></section>`).join('')}<section><small>SUB-FLOORS</small><p class="journal-page__locked">Reserved as an unmapped future area. No rooms or rules have been confirmed.</p></section>`}
+function journalPlacesMarkup(){return`<span class="journal-page__number">PLACES & DISCOVERIES · ${journalPlaces.size} / ${HOTEL_PLACE_DISCOVERIES.length}</span><h3>Places & Discoveries</h3><b class="journal-page__status">ROUTES I CONFIRMED</b><p>These notes record rooms and passages I actually found. A shortcut changes the route; it does not erase the danger.</p>${HOTEL_PLACE_DISCOVERIES.map(entry=>journalPlaces.has(entry.id)?`<section><small>${entry.where}</small><h4>${entry.name}</h4><p>${entry.copy}</p></section>`:`<section><small>UNDISCOVERED LOCATION</small><h4>UNKNOWN</h4><p class="journal-page__locked">I have not found enough evidence to record this place.</p></section>`).join('')}`}
 function journalEntryMarkup(entry,level){
  if(!level)return`<span class="journal-page__number">CREATURE RECORD ${String(SURVIVOR_JOURNAL_ENTRIES.indexOf(entry)+1).padStart(2,'0')}</span><h3>UNKNOWN</h3><b class="journal-page__status">UNDISCOVERED</b><section><small>WHAT I LEARNED</small><p class="journal-page__locked">The page is blank. I have not encountered this creature.</p></section>`;
  const adviceUnlocked=level>=2||journalShowAdvice(),complete=level>=3,status=complete?'COMPLETE ENTRY':adviceUnlocked?'SURVIVAL NOTES AVAILABLE':'BASIC OBSERVATION';
- return`<span class="journal-page__number">CREATURE RECORD ${String(SURVIVOR_JOURNAL_ENTRIES.indexOf(entry)+1).padStart(2,'0')}</span><h3>${entry.name}</h3><b class="journal-page__status">${status}</b><section><small>WHAT I LEARNED</small><p>${entry.learn}</p></section><section><small>HOW TO SURVIVE</small><p class="${adviceUnlocked?'':'journal-page__locked'}">${adviceUnlocked?entry.survive:'I have not learned enough to trust any advice yet.'}</p></section>${complete?`<blockquote>“${entry.note}”</blockquote>${entry.design?`<p class="journal-page__design-note">${entry.design}</p>`:''}`:'<p class="journal-page__locked">The rest of the page is blank.</p>'}`
+ return`<span class="journal-page__number">CREATURE RECORD ${String(SURVIVOR_JOURNAL_ENTRIES.indexOf(entry)+1).padStart(2,'0')}</span><h3>${entry.name}</h3><b class="journal-page__status">${status}</b><section><small>WHAT I LEARNED</small><p>${entry.learn}</p></section><section><small>MY OPINION</small><p>${entry.opinion}</p></section><section><small>HOW TO SURVIVE</small><p class="${adviceUnlocked?'':'journal-page__locked'}">${adviceUnlocked?entry.survive:'I have not learned enough to trust any advice yet.'}</p></section>${complete?`<blockquote>“${entry.note}”</blockquote>${entry.design?`<p class="journal-page__design-note">${entry.design}</p>`:''}`:'<p class="journal-page__locked">The rest of the page is blank.</p>'}`
 }
-function selectJournalEntry(id,focusPage=false){journalSelectedId=id==='opening'||JOURNAL_ENTRY_BY_ID.has(id)?id:'opening';const page=document.querySelector('#journal-entry-page');if(!page)return;page.innerHTML=journalSelectedId==='opening'?journalOpeningMarkup():journalEntryMarkup(JOURNAL_ENTRY_BY_ID.get(journalSelectedId),journalLevel(journalSelectedId));document.querySelectorAll('.journal-entry-button').forEach(button=>{const active=button.dataset.journalId===journalSelectedId;button.classList.toggle('active',active);button.setAttribute('aria-current',active?'page':'false')});page.scrollTop=0;if(focusPage)page.focus({preventScroll:true})}
+function selectJournalEntry(id,focusPage=false){journalSelectedId=id==='opening'||id==='curios'||id==='places'||JOURNAL_ENTRY_BY_ID.has(id)?id:'opening';const page=document.querySelector('#journal-entry-page');if(!page)return;page.innerHTML=journalSelectedId==='opening'?journalOpeningMarkup():journalSelectedId==='curios'?journalCurioMarkup():journalSelectedId==='places'?journalPlacesMarkup():journalEntryMarkup(JOURNAL_ENTRY_BY_ID.get(journalSelectedId),journalLevel(journalSelectedId));document.querySelectorAll('.journal-entry-button').forEach(button=>{const active=button.dataset.journalId===journalSelectedId;button.classList.toggle('active',active);button.setAttribute('aria-current',active?'page':'false')});page.scrollTop=0;if(focusPage)page.focus({preventScroll:true})}
 function renderSurvivorJournal(){
  const list=document.querySelector('#journal-entry-list');if(!list)return;list.replaceChildren();const opening=document.createElement('button');opening.className='journal-entry-button';opening.dataset.journalId='opening';opening.innerHTML='<i>✎</i><span>Opening Page</span><small>READ</small>';opening.onclick=()=>selectJournalEntry('opening');list.append(opening);
+ const curios=document.createElement('button');curios.className='journal-entry-button';curios.dataset.journalId='curios';curios.innerHTML=`<i>◇</i><span>Room Curios</span><small>${journalCurios.size} / 12</small>`;curios.onclick=()=>selectJournalEntry('curios');list.append(curios);
+ const places=document.createElement('button');places.className='journal-entry-button';places.dataset.journalId='places';places.innerHTML=`<i>⌘</i><span>Places & Discoveries</span><small>${journalPlaces.size} / ${HOTEL_PLACE_DISCOVERIES.length}</small>`;places.onclick=()=>selectJournalEntry('places');list.append(places);
  SURVIVOR_JOURNAL_ENTRIES.forEach((entry,index)=>{const level=journalLevel(entry.id),button=document.createElement('button');button.className=`journal-entry-button${level?'':' unknown'}`;button.dataset.journalId=entry.id;const number=document.createElement('i'),name=document.createElement('span'),status=document.createElement('small');number.textContent=level?String(index+1).padStart(2,'0'):'';name.textContent=level?entry.name:'UNKNOWN';status.textContent=level>=3?'FULL':level>=2?'NOTES':level?'SEEN':'—';button.append(number,name,status);button.onclick=()=>selectJournalEntry(entry.id);list.append(button)});
  document.querySelector('#journal-discovery-count').textContent=`${SURVIVOR_JOURNAL_ENTRIES.filter(entry=>journalLevel(entry.id)).length} / ${SURVIVOR_JOURNAL_ENTRIES.length}`;selectJournalEntry(journalSelectedId)
 }

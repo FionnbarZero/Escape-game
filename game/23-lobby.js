@@ -6,10 +6,9 @@ const LOBBY_PROGRESSION_DOORS=Object.freeze([
 ]);
 let lobbyOpenedProgressDoors=new Set();
 function lobbyBadgeDefinitions(){
- const floorOneSave=loadFloorOne();return[
+ return[
   {id:'first-check-in',glyph:'I',name:'FIRST CHECK-IN',copy:'Receive the key to Room 304.',earned:hotelArrivalItems.has('room304-key')},
   {id:'scrap-metal',glyph:'P',name:'SCRAP METAL',copy:'Survive The Purge.',earned:hotelProgress.has('purge-survived')||sessionStorage.getItem('infinite-hotel-purge-complete-v1')==='true'||hotelRunItems.has('purge-survived')},
-  {id:'outclimb',glyph:'↑',name:'OUTCLIMB THE PAST',copy:'Clear the elevation gauntlet.',earned:Boolean(floorOneSave&&floorOneSave.phase>4)||hotelProgress.has('floor-one-checkout')},
   {id:'last-service',glyph:'C',name:'LAST SERVICE',copy:'Escape the Chef’s kitchen.',earned:hotelProgress.has('floor-one-checkout')},
   {id:'severed-facade',glyph:'Ⅱ',name:'SEVERED FAÇADE',copy:'Reach the Room 140 vault.',earned:hotelProgress.has('floor-two-room140')},
   {id:'no-vacancy',glyph:'∞',name:'NO VACANCY',copy:'Complete a numbered hotel run.',earned:hotelProgress.has('doors-style-run-escaped')}

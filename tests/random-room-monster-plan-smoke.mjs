@@ -4,7 +4,7 @@ import { readGameSource } from './source-bundle.mjs';
 const source=readGameSource();
 const definition=source.match(/function randomRoomMonsterPlan[\s\S]*?\n\}/)?.[0];
 if(!definition)throw new Error('Random-room monster planner was not found');
-if(!source.includes('run.randomMonsterCooldown=2'))throw new Error('Random-room monster cooldown is missing');
+if(!source.includes('cooldownRooms=options.cooldownRooms??2'))throw new Error('Configurable random-room monster cooldown is missing');
 if(!source.includes("allowed:['purge','cable-mass']"))throw new Error('Dangerous-room spawn restriction is missing');
 const closetCalls=source.match(/addGeneratedRoomCloset\(spec,/g)?.length||0;
 if(closetCalls!==4)throw new Error(`Expected generated closets on three hotel floors, received ${Math.max(0,closetCalls-1)}`);
@@ -20,7 +20,7 @@ for(let visitSeed=1;visitSeed<=80;visitSeed++){
   if(JSON.stringify(first)!==JSON.stringify(second))throw new Error('Encounter planning is not stable within a visit');
   if(!first){counts.none++;continue}
   if(!(first.kind in counts))throw new Error('Unknown random-room monster: '+first.kind);
-  if(first.delay<2200||first.delay>=5000)throw new Error('Encounter delay is outside the safe window');
+  if(first.delay<1400||first.delay>=2600)throw new Error('Encounter delay is outside the safe window');
   counts[first.kind]++;
   const restricted=plan(key,{chance:1,allowed:['purge','cable-mass']});
   if(restricted.kind==='bash')throw new Error('Bash was selected for a restricted hazard room');
@@ -33,4 +33,6 @@ if(!source.includes('lifetime:options.natural?')||!source.includes('finishTransi
 if(!source.includes("activeHotelEncounter()||(adminMonsters.length?adminMonsters[0].name.toUpperCase():''"))throw new Error('Monster spawns are not mutually exclusive');
 if(!source.includes('||adminMonsters.length||hotelRoomPassage||'))throw new Error('Ransack can interrupt another monster or a room transition');
 
-console.log(JSON.stringify({counts,rate:Number(rate.toFixed(3)),delay:'2.2–5.0 seconds',cooldownRooms:2,lifetime:'8–13 seconds',overlap:'blocked',generatedClosetFloors:closetCalls-1},null,2));
+if(!source.includes("THE LIGHTS FLICKER · SOMETHING IS ENTERING THIS ROOM"))throw new Error('Random monsters do not announce their arrival');
+if(!source.includes('roomGroup!==expectedGroup'))throw new Error('Delayed monsters can leak into a different room');
+console.log(JSON.stringify({counts,rate:Number(rate.toFixed(3)),delay:'1.4–2.6 seconds',cooldownRooms:'configurable',lifetime:'8–13 seconds',warning:true,roomBound:true,overlap:'blocked',generatedClosetFloors:closetCalls-1},null,2));

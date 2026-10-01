@@ -22,7 +22,8 @@ for(const [label,source,needle] of [
  ['Escape close',journal,"event.code==='KeyJ'||event.code==='Escape'"],
  ['control restoration',journal,'journalResumeLocked'],
  ['crouch state preservation',journal,'controls.unlock()'],
- ['main loop pause',runtime,'if(journalPaused){if(controls.isLocked)controls.unlock();renderer.render(scene,camera);return}'],
+ ['main loop pause',runtime,'if(journalPaused){if(controls.isLocked)controls.unlock();journalRenderTick+=rawDt'],
+ ['paused render throttle',runtime,'journalRenderTick>=.12'],
  ['fallback loop pause',runtime,'if(journalPaused||!keyboardMovementFallback'],
  ['spawned monster pause',admin,'if(journalPaused)return'],
  ['notebook layout',css,'.journal-book{'],
@@ -37,5 +38,9 @@ const entries=vm.runInNewContext(`(${arraySource})`);
 if(entries.length!==32)throw new Error(`Expected 32 journal entries, found ${entries.length}`);
 for(const [index,entry] of entries.entries())for(const field of ['id','name','learn','survive','note'])if(!entry[field])throw new Error(`Entry ${index+1} is missing ${field}`);
 if(new Set(entries.map(entry=>entry.id)).size!==32)throw new Error('Journal entry IDs are not unique');
+const opinionSource=journal.match(/const SURVIVOR_JOURNAL_OPINIONS=(\{[\s\S]*?\n\});/)?.[1],opinions=opinionSource?vm.runInNewContext(`(${opinionSource})`):{};
+if(Object.keys(opinions).length!==32||entries.some(entry=>!opinions[entry.id]))throw new Error('Every monster must have a separate journal opinion');
+for(const needle of ['hotel-survivor-curios-v1','function journalCurioMarkup()','hotel-survivor-places-v1','function journalPlacesMarkup()','Places & Discoveries','<small>MY OPINION</small>','id===\'curios\'','the <b>sub-floors</b>'])if(!journal.includes(needle))throw new Error(`Expanded journal feature missing: ${needle}`);
+if(runtime.includes("removeItem('hotel-survivor-curios-v1')")||runtime.includes("removeItem('hotel-survivor-places-v1')"))throw new Error('Reset Game must preserve permanent optional-discovery records');
 
-console.log(JSON.stringify({entries:entries.length,layout:'two-page notebook',discovery:['unknown','observation','survival','complete'],controls:['J toggle','Escape close','paused gameplay','crouch preserved','typing protected'],persistence:['page reload','Reset Game'],adviceOverride:true},null,2));
+console.log(JSON.stringify({entries:entries.length,opinions:Object.keys(opinions).length,roomCurios:12,subFloors:'reserved and unmapped',layout:'two-page notebook',discovery:['unknown','observation','survival','complete'],controls:['J toggle','Escape close','paused gameplay','crouch preserved','typing protected'],persistence:['page reload','Reset Game'],adviceOverride:true},null,2));

@@ -92,7 +92,8 @@ for(const [needle,label] of [
  ['function updateMonsterDebugOverlay','developer AI trace'],
  ["event.code!=='F4'",'F4 overlay toggle']
 ])requireText(shared,needle,label);
-requireText(runtime,'updateMonsterDebugOverlay();renderer.render(scene,camera)','single render-loop debug update');
+requireText(runtime,'if(aiDebugEnabled)updateMonsterDebugOverlay()','throttled single-loop debug update');
+requireText(runtime,'renderer.render(scene,camera)','single render loop');
 requireText(manifest,"'18-monster-behavior.js'",'shared behavior module loading');
 requireText(html,'id="ai-debug" hidden','debug overlay off by default');
 

@@ -20,7 +20,8 @@ for(const [name,pattern] of required)if(!pattern.test(lobby))throw new Error(`Mi
 if(!input.includes("data.type==='lobby-progression-door'"))throw new Error('Lobby progression doors are not routed through normal interaction input');
 if((world.match(/lobby progression door campaign/g)||[]).length<2)throw new Error('Delayed lobby construction does not recognize the renamed center progression door');
 if(!purge.includes("saveHotelProgress('purge-survived')"))throw new Error('Purge badge is not persisted for later lobby sessions');
-const badgeIds=[...lobby.matchAll(/id:'(first-check-in|scrap-metal|outclimb|last-service|severed-facade|no-vacancy)'/g)].map(match=>match[1]);
-if(new Set(badgeIds).size!==6)throw new Error(`Expected six unique badge requirements, found ${JSON.stringify(badgeIds)}`);
+const badgeIds=[...lobby.matchAll(/id:'(first-check-in|scrap-metal|last-service|severed-facade|no-vacancy)'/g)].map(match=>match[1]);
+if(lobby.includes("id:'outclimb'")||lobby.includes('OUTCLIMB THE PAST'))throw new Error('The removed Outclimb the Past badge is still present');
+if(new Set(badgeIds).size!==5)throw new Error(`Expected five unique badge requirements, found ${JSON.stringify(badgeIds)}`);
 
 console.log(JSON.stringify({doors:['journals','campaign','badges'],journalRule:'all 32 records discovered',campaignRule:'current Room 140 endpoint or legacy completed ending',badges:badgeIds.length,destinations:'pending user room definitions'},null,2));
